@@ -3,7 +3,7 @@ package dbkit
 import (
 	"fmt"
 	"github.com/astaxie/beego/logs"
-	"git.gumpcome.com/gokit/timekit"
+	"git.gumpcome.com/go_kit/timekit"
 	"testing"
 )
 

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/astaxie/beego/logs"
 	_ "github.com/go-sql-driver/mysql"
-	"git.gumpcome.com/gokit/logiccode"
-	"git.gumpcome.com/gokit/strkit"
+	"git.gumpcome.com/go_kit/logiccode"
+	"git.gumpcome.com/go_kit/strkit"
 	"strconv"
 )
 

@@ -3,7 +3,7 @@ package logiccode
 
 import (
 	"strconv"
-	"git.gumpcome.com/gokit/strkit"
+	"git.gumpcome.com/go_kit/strkit"
 )
 
 func New(code int, msg string) error {

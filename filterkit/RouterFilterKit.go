@@ -3,7 +3,7 @@ package filterkit
 import (
 	"fmt"
 	"github.com/astaxie/beego/context"
-	"git.gumpcome.com/gokit/logkit"
+	"git.gumpcome.com/go_kit/logkit"
 	"time"
 	"github.com/astaxie/beego"
 )

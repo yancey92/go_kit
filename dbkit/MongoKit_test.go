@@ -2,7 +2,7 @@ package dbkit
 
 import (
 	. "github.com/smartystreets/goconvey/convey"
-	"git.gumpcome.com/gokit/logkit"
+	"git.gumpcome.com/go_kit/logkit"
 	"testing"
 )
 

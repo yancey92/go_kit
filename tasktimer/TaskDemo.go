@@ -37,7 +37,7 @@ package tasktimer
 import (
 	"github.com/astaxie/beego/toolbox"
 	"fmt"
-	"git.gumpcome.com/gokit/timekit"
+	"git.gumpcome.com/go_kit/timekit"
 )
 
 // 实际应用是必须在main函数中主动调用RunTasks方法使其生效。
