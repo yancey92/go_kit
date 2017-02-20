@@ -8,10 +8,10 @@ import (
 	"git.gumpcome.com/go_kit/logiccode"
 	"git.gumpcome.com/go_kit/strkit"
 	"strconv"
+	"errors"
 )
 
-var db *sql.DB
-var err error
+var dbs = make(map[string]*sql.DB)
 var dbLogger *logs.BeeLogger
 
 type Page struct {
@@ -22,24 +22,42 @@ type Page struct {
 	List       interface{} `json:"list" desc:"分页结果集"`
 }
 
+func addDbCfg(cfgName string, db *sql.DB) error  {
+	if cfgName == "" {
+		return errors.New("mysql config name is nil!")
+	}
+
+	if db == nil {
+		return errors.New("mysql conn is nil!")
+	}
+
+	if dbs[cfgName] != nil {
+		return errors.New("config name is existed!")
+	}
+
+	dbs[cfgName] = db
+	return nil
+}
+
 // @Title 初始化MySQL数据库
 // @param userName 	用户名
 // @param userPwd 	密码
 // @param host 		地址
 // @param dbName 	数据库名称
+// @param cfgName	数据库连接池配置名称
 // @param maxIdle 	最大活跃连接数
 // @param maxActive	最大连接数
-func InitMysql(userName string, userPwd string, host string, dbName string, maxIdle int, maxActive int, log *logs.BeeLogger) {
+func InitMysql(userName string, userPwd string, host string, dbName string, cfgName string, maxIdle int, maxActive int, log *logs.BeeLogger) {
 	if log == nil {
-		panic("mysql log is nil!")
+		panic(fmt.Sprintf("%s mysql log is nil!", cfgName))
 	}
 	dbLogger = log
 
 	if userName == "" || userPwd == "" || host == "" || dbName == "" {
-		panic("mysql connection info is empty!")
+		panic(fmt.Sprintf("%s mysql connection info is empty!", cfgName))
 	}
 
-	db, err = sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&loc=Local", userName, userPwd, host, dbName))
+	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&loc=Local", userName, userPwd, host, dbName))
 
 	if err != nil {
 		panic(err.Error())
@@ -57,12 +75,15 @@ func InitMysql(userName string, userPwd string, host string, dbName string, maxI
 		panic(err.Error())
 	}
 
-	log.Info("%s", "数据库初始化成功...")
+	log.Info("%s 数据库初始化成功...", cfgName)
 }
 
 // @Title 获取MySQL连接
-func GetMysqlCon() *sql.DB {
-	return db
+func GetMysqlCon(cfgName string) (*sql.DB, error) {
+	if cfgName == "" {
+		return nil, errors.New("mysql config name is nil!")
+	}
+	return dbs[cfgName], nil
 }
 
 // INSERT INTO `user`(name,age,email,gender,height,interests) VALUES (?,?,?,?,?,?)
