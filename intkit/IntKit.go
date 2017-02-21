@@ -1,6 +1,6 @@
 package intkit
 
-// @Title 判断多个字符串是否为空
+// @Title 判断多个整形是否为0
 // @Description
 // @param strs
 // usage:
