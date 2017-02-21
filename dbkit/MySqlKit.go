@@ -74,7 +74,7 @@ func InitMysql(userName string, userPwd string, host string, dbName string, cfgN
 	if err != nil {
 		panic(err.Error())
 	}
-
+	addDbCfg(cfgName, db)
 	log.Info("%s 数据库初始化成功...", cfgName)
 }
 
