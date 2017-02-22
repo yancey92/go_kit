@@ -81,6 +81,12 @@ func DbPageCountToIntCode() error {
 	return New(100009, "page count string to int error")
 }
 
+// @Title 数据库配置名称错误
+// @Description
+func DbConfigNameErrorCode() error {
+	return New(100010, "mysql config name is nil")
+}
+
 // @Title 请求参数值错误
 // @Description 用于反射请求参数对象、参数值类型转换、必填参数校验错误反馈
 func ReqParamErrorCode() error  {

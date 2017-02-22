@@ -81,7 +81,7 @@ func InitMysql(userName string, userPwd string, host string, dbName string, cfgN
 // @Title 获取MySQL连接
 func GetMysqlCon(cfgName string) (*sql.DB, error) {
 	if cfgName == "" {
-		return nil, errors.New("mysql config name is nil!")
+		return nil, logiccode.DbConfigNameErrorCode()
 	}
 	return dbs[cfgName], nil
 }
