@@ -5,6 +5,7 @@ package strkit
 import (
 	"bytes"
 	"strconv"
+	"unicode/utf8"
 )
 
 // @Title 判断多个字符串是否不为空
@@ -69,6 +70,16 @@ func StrJoin(strs ...string) string {
 		}
 	}
 	return strBuffer.String()
+}
+
+// @Title 获取字符串长度
+// @Description
+// @param str
+// usage:
+//	GetStrLen("hello ")
+// 	return 6
+func GetStrLen(str string) int  {
+	return utf8.RuneCountInString(str)
 }
 
 

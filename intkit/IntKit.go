@@ -5,7 +5,7 @@ package intkit
 // @param strs
 // usage:
 //	IntIsZero(0) return false
-func IntIsZero(ints ...int64) bool {
+func IntIsZero(ints ...int) bool {
 	if len(ints) == 0 {
 		return false
 	}

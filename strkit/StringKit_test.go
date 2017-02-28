@@ -83,3 +83,15 @@ func TestStringBuilder_ToString(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestGetStrLen(t *testing.T) {
+	enLen := GetStrLen("hello ")
+	if (6 != enLen) {
+		t.Fail()
+	}
+
+	cnLen := GetStrLen("你好,Go")
+	if (5 != cnLen) {
+		t.Fail()
+	}
+}
