@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"io"
 	"encoding/hex"
+	"strings"
 )
 
 // @Title 创建32位唯一ID
@@ -12,7 +13,7 @@ import (
 // usage:
 //	CreateUniqueId()
 func CreateUniqueId() string {
-	return NewV1().String()
+	return strings.ToUpper(NewV1().String())
 }
 
 // @Title 创建字符串MD5
@@ -22,5 +23,5 @@ func CreateUniqueId() string {
 func CreateMd5(str string) string {
 	m := md5.New()
 	io.WriteString(m, str)
-	return hex.EncodeToString(m.Sum(nil))
+	return strings.ToUpper(hex.EncodeToString(m.Sum(nil)))
 }

@@ -25,8 +25,8 @@ const (
 	ServiceBusLogProdMode = "prod"
 )
 
-// 队列消息模型
-type QueueMsgMode struct {
+// 服务总线消息模型
+type ServiceBusMsgMode struct {
 	XMLName     xml.Name `xml:"entry"`
 	Content     string   `xml:"content"`
 }
@@ -89,12 +89,12 @@ func InitServiceBus(logMode string) {
 	mySerBus.logger.Info("服务总线初始化成功...")
 }
 
-// @Title 发送消息到队列中
-// @param uri 		队列URI
+// @Title 发送消息到服务总线中
+// @param uri 		服务总线URI
 // @param keyName 	密钥名称
 // @param key 		密钥
 // @param message 	消息
-func SendMessageToQueue(uri string, keyName string, key string, message string) error {
+func SendMessageToServiceBus(uri string, keyName string, key string, message string) error {
 	token := getServiceBusToken(uri, keyName, key)
 	if strkit.StrIsBlank(token, message) {
 		return errors.New("token or message is blank!")
@@ -111,7 +111,7 @@ func SendMessageToQueue(uri string, keyName string, key string, message string) 
 	_, err := req.String()
 	resp, err := req.Response()
 	if err != nil {
-		mySerBus.logger.Error("发送消息到队列请求失败, uri=%s, msg=%s, err=%v", uri, message, err)
+		mySerBus.logger.Error("发送消息到服务总线请求失败, uri=%s, msg=%s, err=%v", uri, message, err)
 		return errors.New("send message to queue request is error!")
 	}
 	if http.StatusCreated != resp.StatusCode {
@@ -120,15 +120,15 @@ func SendMessageToQueue(uri string, keyName string, key string, message string) 
 	return nil
 }
 
-// @Title 接收队列消息服务
-func receiveMessageFromQueueServer(uri string, keyName string, key string, msgProcessor func(msg string) bool) {
+// @Title 从服务总线接收消息
+func receiveMessageFromServiceBus(uri string, keyName string, key string, subName string, msgProcessor func(msg string) bool) {
 	token := getServiceBusToken(uri, keyName, key)
 	if strkit.StrIsBlank(token) {
 		mySerBus.logger.Error("token is blank!")
 	}
 
-	mySerBus.logger.Info(fmt.Sprintf("开始请求接收队列消息, uri=%s", uri))
-	req := httplib.Post(uri + "/messages/head")
+	mySerBus.logger.Info(fmt.Sprintf("开始接收服务总线消息, uri=%s", uri))
+	req := httplib.Post(uri + "/subscriptions" + subName + "/messages/head")
 	req.Header("Authorization", token)
 	req.SetTimeout(60 * time.Second, 60 * time.Second)
 
@@ -145,40 +145,41 @@ func receiveMessageFromQueueServer(uri string, keyName string, key string, msgPr
 	fmt.Println(brokerProperties)
 
 	//解析消息
-	msg := QueueMsgMode{}
+	msg := ServiceBusMsgMode{}
 	err = xml.Unmarshal([]byte(result), &msg)
 	if err != nil {
-		mySerBus.logger.Error("从队列接收消息后解析消息失败, uri=%s, msg=%s, err=%v", uri, result, err)
+		mySerBus.logger.Error("从服务总线接收消息后解析消息失败, uri=%s, msg=%s, err=%v", uri, result, err)
 	}
 	if msg.Content == "" {
-		mySerBus.logger.Error("从队列接收消息后解析消息内容为空, uri=%s, msg=%s, err=%v", uri, result, err)
+		mySerBus.logger.Error("从服务总线接收消息后解析消息内容为空, uri=%s, msg=%s, err=%v", uri, result, err)
 	}
 	isSuccess := msgProcessor(strings.TrimSpace(msg.Content))
 	if isSuccess {
-		mySerBus.logger.Info(fmt.Sprintf("开始请求删除队列消息 location=%s", location))
+		mySerBus.logger.Info(fmt.Sprintf("开始请求删除服务总线消息 location=%s", location))
 		req = httplib.Delete(location)
 		req.Header("Authorization", token)
 		req.SetTimeout(60 * time.Second, 60 * time.Second)
 		_, err = req.String()
 		resp, err = req.Response()
 		if err != nil {
-			mySerBus.logger.Error("删除队列中消息请求失败, location=%s, err=%v", location, err)
+			mySerBus.logger.Error("删除服务总线中消息请求失败, location=%s, err=%v", location, err)
 		}
 		if http.StatusOK != resp.StatusCode {
-			mySerBus.logger.Error("删除队列中消息处理失败, location=%s, err=%v", location, err)
+			mySerBus.logger.Error("删除服务总线中消息处理失败, location=%s, err=%v", location, err)
 		}
 	}
 }
 
-// @Title 启用接收队列消息服务
-// @param uri 			队列URI
+// @Title 启用接收服务总线消息服务
+// @param uri 			服务总线URI
 // @param keyName 		密钥名称
 // @param key 			密钥
+// @param subName		订阅名称
 // @param func(msg string) bool 消息处理器
-func StartReceiveMessageFromQueueServer(uri string, keyName string, key string, msgProcessor func(msg string) bool)  {
+func StartReceiveMessageFromServiceBusServer(uri string, keyName string, key string, subName string, msgProcessor func(msg string) bool)  {
 	go func() {
 		for {
-			receiveMessageFromQueueServer(uri, keyName, key, msgProcessor)
+			receiveMessageFromServiceBus(uri, keyName, key, subName, msgProcessor)
 		}
 	}()
 }
