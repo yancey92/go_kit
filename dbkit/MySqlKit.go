@@ -9,6 +9,7 @@ import (
 	"git.gumpcome.com/go_kit/strkit"
 	"strconv"
 	"errors"
+	"time"
 )
 
 var dbs = make(map[string]*sql.DB)
@@ -70,6 +71,8 @@ func InitMysql(userName string, userPwd string, host string, dbName string, cfgN
 	}
 	db.SetMaxIdleConns(maxIdle)
 	db.SetMaxOpenConns(maxActive)
+	//设置连接的存活时间,不是指sleep时间,而是从创建连接时算起。
+	db.SetConnMaxLifetime(3 * time.Minute)
 	err = db.Ping()
 	if err != nil {
 		panic(err.Error())
