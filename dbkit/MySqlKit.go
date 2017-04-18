@@ -195,11 +195,6 @@ func SaveInMysql(myDbCon *sql.DB, tableName string, data map[string]interface{})
 		return false, 0, logiccode.DbInsertErrorCode()
 	}
 
-	rowsNum, _ := result.RowsAffected()
-	if rowsNum == 0 {
-		return false, 0, logiccode.DbZeroErrorCode()
-	}
-
 	id, err := result.LastInsertId()
 
 	return true, id, err

@@ -59,3 +59,55 @@ func TestGetDayTime(t *testing.T)  {
 	ms, dateStr, _ := GetTimeMsAndDate(tm, DateFormat_YYYY_MM_DD)
 	fmt.Printf("毫秒=%d,日期=%s\n", ms, dateStr)
 }
+
+func TestDateRangeVaild(t *testing.T) {
+	startDate := "2016-11-11"
+	endDate := "2016-11-12"
+	result, err := DateRangeVaild(startDate, endDate, DateFormat_YYYY_MM_DD)
+	if err != nil {
+		fmt.Printf("%v", err)
+	}
+	fmt.Printf("开始日期=%s 结束日期=%s 范围是否合法 %v\n", startDate, endDate, result)
+}
+
+func TestDateRangeVaild2(t *testing.T) {
+	startDate := "2016-11-11 11:11:11"
+	endDate := "2016-11-11 23:00:00"
+	result, err := DateRangeVaild(startDate, endDate, DateFormat_YYYY_MM_DD_HH_MM_SS)
+	if err != nil {
+		fmt.Printf("%v", err)
+	}
+	fmt.Printf("开始日期=%s 结束日期=%s 范围是否合法 %v\n", startDate, endDate, result)
+}
+
+func TestDefaultDateRangeVaild(t *testing.T) {
+	startDate := "2016-11-11"
+	endDate := "2016-11-11"
+	result, err := DefaultDateRangeVaild(startDate, endDate)
+	if err != nil {
+		fmt.Printf("%v", err)
+	}
+	fmt.Printf("开始日期=%s 结束日期=%s 范围是否合法 %v\n", startDate, endDate, result)
+}
+
+func TestCheckDateRange(t *testing.T) {
+	checkDate := "2016-11-12 13:11:10"
+	startDate := "2016-11-11 11:11:11"
+	endDate := "2016-11-11 23:00:00"
+	result, err := CheckDateRange(checkDate, startDate, endDate, DateFormat_YYYY_MM_DD_HH_MM_SS)
+	if err != nil {
+		fmt.Printf("%v", err)
+	}
+	fmt.Printf("校验日期=%s 开始日期=%s 结束日期=%s 范围是否合法 %v\n", checkDate, startDate, endDate, result)
+}
+
+func TestDefaultCheckDateRange(t *testing.T) {
+	checkDate := "2016-11-11"
+	startDate := "2016-11-11"
+	endDate := "2016-11-11"
+	result, err := DefaultCheckDateRange(checkDate, startDate, endDate)
+	if err != nil {
+		fmt.Printf("%v", err)
+	}
+	fmt.Printf("校验日期=%s 开始日期=%s 结束日期=%s 范围是否合法 %v\n", checkDate, startDate, endDate, result)
+}

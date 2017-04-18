@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"time"
+	"git.gumpcome.com/go_kit/logiccode"
 )
 
 const (
@@ -15,8 +16,11 @@ const (
 	DateFormat_YYYYMMDDHHMMSSMS       string = "20060102150405000"
 	DateFormat_YYYYMMDDHHMMSS         string = "20060102150405"
 	DateFormat_YYYYMMDD               string = "20060102"
+	DATE_RANGE_BEFORE                 string = "before"
+	DATE_RANGE_MIDDLE                 string = "middle"
+	DATE_RANGE_AFTER                  string = "after"
+	DATE_RANGE_ERROR                  string = "error"
 )
-
 
 // @Title 格式化时间对象为日期字符串格式
 // @Description
@@ -140,4 +144,92 @@ func GetEndDayMsAndDate(date string) (int64, string, error) {
 	}
 	afterDateTime := dateTime.Add(time.Second*60*60*24 - 1)
 	return GetTimeMsAndDate(afterDateTime, DateFormat_YYYY_MM_DD_HH_MM_SS)
+}
+
+// @Title 判断checkDate是否在startDate和endDate日期范围之间
+// usage:
+//	DATE_RANGE_BEFORE: checkDate在startDate前面
+//	DATE_RANGE_AFTER: checkDate在endDate前面
+//	DATE_RANGE_MIDDLE: checkDate在startDate和endDate日期范围之间
+func CheckDateRange(checkDate string, startDate string, endDate string, dateStyle string) (string, error) {
+	endDateTime, err := StringToTime(endDate, dateStyle)
+	if err != nil {
+		return DATE_RANGE_ERROR, err
+	}
+	startDateTime, err := StringToTime(startDate, dateStyle)
+	if err != nil {
+		return DATE_RANGE_ERROR, err
+	}
+	checkDateTime, err := StringToTime(checkDate, dateStyle)
+	if err != nil {
+		return DATE_RANGE_ERROR, err
+	}
+	if !startDateTime.Before(endDateTime) {
+		return DATE_RANGE_ERROR, logiccode.New(100302, "data range error")
+	}
+	if checkDateTime.Before(startDateTime) {
+		return DATE_RANGE_BEFORE, nil
+	}
+	if checkDateTime.After(endDateTime) {
+		return DATE_RANGE_AFTER, nil
+	}
+	return DATE_RANGE_MIDDLE, nil
+}
+
+func DefaultCheckDateRange(checkDate string, startDate string, endDate string) (string, error) {
+	endDateTime, err := StringToTime(endDate, DateFormat_YYYY_MM_DD)
+	if err != nil {
+		return DATE_RANGE_ERROR, err
+	}
+	afterEndDateTime := endDateTime.Add(time.Second*60*60*24 - 1)
+	startDateTime, err := StringToTime(startDate, DateFormat_YYYY_MM_DD)
+	if err != nil {
+		return DATE_RANGE_ERROR, err
+	}
+	checkDateTime, err := StringToTime(checkDate, DateFormat_YYYY_MM_DD)
+	if err != nil {
+		return DATE_RANGE_ERROR, err
+	}
+	if !startDateTime.Before(afterEndDateTime) {
+		return DATE_RANGE_ERROR, logiccode.New(100302, "data range error")
+	}
+	if checkDateTime.Before(startDateTime) {
+		return DATE_RANGE_BEFORE, nil
+	}
+	if checkDateTime.After(afterEndDateTime) {
+		return DATE_RANGE_AFTER, nil
+	}
+	return DATE_RANGE_MIDDLE, nil
+}
+
+// @Title 校验startDate和endDate日期范围的有效性
+func DateRangeVaild(startDate string, endDate string, dateStyle string) (bool, error) {
+	endDateTime, err := StringToTime(endDate, dateStyle)
+	if err != nil {
+		return false, err
+	}
+	startDateTime, err := StringToTime(startDate, dateStyle)
+	if err != nil {
+		return false, err
+	}
+	if startDateTime.Before(endDateTime) {
+		return true, nil
+	}
+	return false, err
+}
+
+func DefaultDateRangeVaild(startDate string, endDate string) (bool, error) {
+	endDateTime, err := StringToTime(endDate, DateFormat_YYYY_MM_DD)
+	if err != nil {
+		return false, err
+	}
+	afterEndDateTime := endDateTime.Add(time.Second*60*60*24 - 1)
+	startDateTime, err := StringToTime(startDate, DateFormat_YYYY_MM_DD)
+	if err != nil {
+		return false, err
+	}
+	if startDateTime.Before(afterEndDateTime) {
+		return true, nil
+	}
+	return false, err
 }
