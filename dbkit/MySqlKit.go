@@ -3,17 +3,16 @@ package dbkit
 import (
 	"database/sql"
 	"fmt"
-	"github.com/astaxie/beego/logs"
 	_ "github.com/go-sql-driver/mysql"
 	"git.gumpcome.com/go_kit/logiccode"
 	"git.gumpcome.com/go_kit/strkit"
 	"strconv"
 	"errors"
 	"time"
+	"github.com/astaxie/beego"
 )
 
 var dbs = make(map[string]*sql.DB)
-var dbLogger *logs.BeeLogger
 
 type Page struct {
 	PageNumber int         `json:"page_number" desc:"第几页"`
@@ -48,12 +47,7 @@ func addDbCfg(cfgName string, db *sql.DB) error  {
 // @param cfgName	数据库连接池配置名称
 // @param maxIdle 	最大活跃连接数
 // @param maxActive	最大连接数
-func InitMysql(userName string, userPwd string, host string, dbName string, cfgName string, maxIdle int, maxActive int, log *logs.BeeLogger) {
-	if log == nil {
-		panic(fmt.Sprintf("%s mysql log is nil!", cfgName))
-	}
-	dbLogger = log
-
+func InitMysql(userName string, userPwd string, host string, dbName string, cfgName string, maxIdle int, maxActive int) {
 	if userName == "" || userPwd == "" || host == "" || dbName == "" {
 		panic(fmt.Sprintf("%s mysql connection info is empty!", cfgName))
 	}
@@ -78,7 +72,7 @@ func InitMysql(userName string, userPwd string, host string, dbName string, cfgN
 		panic(err.Error())
 	}
 	addDbCfg(cfgName, db)
-	log.Info("%s 数据库初始化成功...", cfgName)
+	beego.Info(fmt.Sprintf("%s 数据库初始化成功...", cfgName))
 }
 
 // @Title 获取MySQL连接
@@ -187,11 +181,11 @@ func SaveInMysql(myDbCon *sql.DB, tableName string, data map[string]interface{})
 	}
 	sql, params := CreateMysqlInsertSQL(tableName, data)
 
-	dbLogger.Debug("SQL %s VALS %s", sql, fmt.Sprint(params))
+	beego.Debug(fmt.Sprintf("SQL %s VALS %#v", sql, params))
 
 	result, err := myDbCon.Exec(sql, params...)
 	if err != nil {
-		dbLogger.Error("%v", err)
+		beego.Error(fmt.Sprintf("%v", err))
 		return false, 0, logiccode.DbInsertErrorCode()
 	}
 
@@ -217,11 +211,11 @@ func UpdateByIdInMysql(myDbCon *sql.DB, tableName string, data map[string]interf
 	}
 	sql, params := CreateMysqlUpdateByIdSQL(tableName, data)
 
-	dbLogger.Debug("SQL %s VALS %s", sql, fmt.Sprint(params))
+	beego.Debug(fmt.Sprintf("SQL %s VALS %#v", sql, params))
 
 	result, err := myDbCon.Exec(sql, params...)
 	if err != nil {
-		dbLogger.Error("%v", err)
+		beego.Error(fmt.Sprintf("%v", err))
 		return false, logiccode.DbUpdateErrorCode()
 	}
 
@@ -246,11 +240,11 @@ func UpdateInMysql(myDbCon *sql.DB, sql string, data ...interface{}) (bool, erro
 		return false, logiccode.DbUpdateErrorCode()
 	}
 
-	dbLogger.Debug("SQL %s VALS %s", sql, fmt.Sprint(data))
+	beego.Debug(fmt.Sprintf("SQL %s VALS %#v", sql, data))
 
 	result, err := myDbCon.Exec(sql, data...)
 	if err != nil {
-		dbLogger.Error("%v", err)
+		beego.Error(fmt.Sprintf("%v", err))
 		return false, logiccode.DbUpdateErrorCode()
 	}
 
@@ -276,11 +270,11 @@ func DeleteByIdInMysql(myDbCon *sql.DB, tableName string, id interface{}) (bool,
 	}
 	sql, params := CreateDeleteMysqlSQL(tableName, map[string]interface{}{"id": id})
 
-	dbLogger.Debug("SQL %s VALS %s", sql, fmt.Sprint(params))
+	beego.Debug(fmt.Sprintf("SQL %s VALS %#v", sql, params))
 
 	result, err := myDbCon.Exec(sql, params...)
 	if err != nil {
-		dbLogger.Error("%v", err)
+		beego.Error(fmt.Sprintf("%v", err))
 		return false, logiccode.DbDeleteErrorCode()
 	}
 
@@ -305,11 +299,11 @@ func DeleteInMysql(myDbCon *sql.DB, sql string, data ...interface{}) (bool, erro
 		return false, logiccode.DbDeleteErrorCode()
 	}
 
-	dbLogger.Debug("SQL %s VALS %s", sql, fmt.Sprint(data))
+	beego.Debug(fmt.Sprintf("SQL %s VALS %#v", sql, data))
 
 	result, err := myDbCon.Exec(sql, data...)
 	if err != nil {
-		dbLogger.Error("%v", err)
+		beego.Error(fmt.Sprintf("%v", err))
 		return false, logiccode.DbDeleteErrorCode()
 	}
 
@@ -334,7 +328,7 @@ func FindInMysql(myDbCon *sql.DB, querySql string, data ...interface{}) ([]map[s
 		return nil, logiccode.DbDeleteErrorCode()
 	}
 
-	dbLogger.Debug("SQL %s VALS %s", querySql, fmt.Sprint(data))
+	beego.Debug(fmt.Sprintf("SQL %s VALS %#v", querySql, data))
 
 	rows, err := myDbCon.Query(querySql, data...)
 
@@ -342,7 +336,7 @@ func FindInMysql(myDbCon *sql.DB, querySql string, data ...interface{}) ([]map[s
 		return nil, nil
 	}
 	if err != nil {
-		dbLogger.Error("%v", err)
+		beego.Error(fmt.Sprintf("%v", err))
 		return nil, logiccode.DbQueryErrorCode()
 	}
 
@@ -389,7 +383,7 @@ func FindFirstInMysql(myDbCon *sql.DB, querySql string, data ...interface{}) (ma
 		return nil, logiccode.DbDeleteErrorCode()
 	}
 
-	dbLogger.Debug("SQL %s VALS %s", querySql, fmt.Sprint(data))
+	beego.Debug(fmt.Sprintf("SQL %s VALS %#v", querySql, data))
 
 	rows, err := myDbCon.Query(querySql, data...)
 
@@ -397,7 +391,7 @@ func FindFirstInMysql(myDbCon *sql.DB, querySql string, data ...interface{}) (ma
 		return nil, nil
 	}
 	if err != nil {
-		dbLogger.Error("%v", err)
+		beego.Error(fmt.Sprintf("%v", err))
 		return nil, logiccode.DbQueryErrorCode()
 	}
 
@@ -458,7 +452,7 @@ func PaginateInMysql(myDbCon *sql.DB, pageNumber int, pageSize int, selectSql st
 
 	totalRow, err := strconv.Atoi(totalRowResult["count"])
 	if err != nil {
-		dbLogger.Error("%v", err)
+		beego.Error(fmt.Sprintf("%v", err))
 		return Page{}, logiccode.DbPageCountToIntCode()
 	}
 
