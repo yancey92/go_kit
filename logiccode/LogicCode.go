@@ -87,6 +87,12 @@ func DbConfigNameErrorCode() error {
 	return New(100010, "mysql config name is nil")
 }
 
+// @Title DB结果字符串转整型错误
+// @Description 用于DAO层操作DB错误反馈
+func DbItemToIntErrorCode() error {
+	return New(100011, "db item to int error")
+}
+
 // @Title 请求参数值错误
 // @Description 用于反射请求参数对象、参数值类型转换、必填参数校验错误反馈
 func ReqParamErrorCode() error  {

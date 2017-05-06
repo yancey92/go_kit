@@ -2,14 +2,14 @@ package dbkit
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
 	"git.gumpcome.com/go_kit/logiccode"
 	"git.gumpcome.com/go_kit/strkit"
-	"strconv"
-	"errors"
-	"time"
 	"github.com/astaxie/beego"
+	_ "github.com/go-sql-driver/mysql"
+	"strconv"
+	"time"
 )
 
 var dbs = make(map[string]*sql.DB)
@@ -22,7 +22,7 @@ type Page struct {
 	List       interface{} `json:"list" desc:"分页结果集"`
 }
 
-func addDbCfg(cfgName string, db *sql.DB) error  {
+func addDbCfg(cfgName string, db *sql.DB) error {
 	if cfgName == "" {
 		return errors.New("mysql config name is nil!")
 	}
@@ -319,13 +319,20 @@ func DeleteInMysql(myDbCon *sql.DB, sql string, data ...interface{}) (bool, erro
 // @Description data保存的参数值必须与查询SQL语句WHERE条件需要的字段顺序一致
 // @param myDbCon 	数据库连接
 // @param sql		查询SQL语句
+// @param intItems	需要转换成Int类型的字段集合
 // @param data		WHERE条件字段值记录
-func FindInMysql(myDbCon *sql.DB, querySql string, data ...interface{}) ([]map[string]string, error) {
+func FindInMysql(myDbCon *sql.DB, querySql string, intItems []string, data ...interface{}) ([]map[string]interface{}, error) {
 	if myDbCon == nil {
 		return nil, logiccode.DbConErrorCode()
 	}
 	if querySql == "" {
 		return nil, logiccode.DbDeleteErrorCode()
+	}
+	intItemsMap := make(map[string]int)
+	if intItems != nil && len(intItems) > 0 {
+		for idx, item := range intItems {
+			intItemsMap[item] = idx
+		}
 	}
 
 	beego.Debug(fmt.Sprintf("SQL %s VALS %#v", querySql, data))
@@ -348,16 +355,27 @@ func FindInMysql(myDbCon *sql.DB, querySql string, data ...interface{}) ([]map[s
 	for i := range values {
 		scanArgs[i] = &values[i]
 	}
-	var records = make([]map[string]string, 0, 10)
+	var records = make([]map[string]interface{}, 0, 10)
+	var itemVal string
 	for rows.Next() {
 		err = rows.Scan(scanArgs...)
-		record := make(map[string]string)
+		record := make(map[string]interface{})
 		for i, col := range values {
+			itemVal = ""
 			switch col.(type) {
 			case []uint8:
-				record[columns[i]] = string(col.([]uint8))
+				itemVal = string(col.([]uint8))
 			case int64:
-				record[columns[i]] = fmt.Sprint(col.(int64))
+				itemVal = fmt.Sprint(col.(int64))
+			}
+
+			if _, ok := intItemsMap[columns[i]]; ok {
+				record[columns[i]], err = strkit.StrToInt(itemVal)
+				if err != nil {
+					return nil, logiccode.DbItemToIntErrorCode()
+				}
+			} else {
+				record[columns[i]] = itemVal
 			}
 		}
 		if len(record) > 0 {
@@ -374,13 +392,20 @@ func FindInMysql(myDbCon *sql.DB, querySql string, data ...interface{}) ([]map[s
 // @Description data保存的参数值必须与查询SQL语句WHERE条件需要的字段顺序一致,如果查询SQL影响的行数多与1行,必须追加 LIMIT 1 条件
 // @param myDbCon 	数据库连接
 // @param sql		查询SQL语句
+// @param intItems	需要转换成Int类型的字段集合
 // @param data		WHERE条件字段值记录
-func FindFirstInMysql(myDbCon *sql.DB, querySql string, data ...interface{}) (map[string]string, error) {
+func FindFirstInMysql(myDbCon *sql.DB, querySql string, intItems []string, data ...interface{}) (map[string]interface{}, error) {
 	if myDbCon == nil {
 		return nil, logiccode.DbConErrorCode()
 	}
 	if querySql == "" {
 		return nil, logiccode.DbDeleteErrorCode()
+	}
+	intItemsMap := make(map[string]int)
+	if intItems != nil && len(intItems) > 0 {
+		for idx, item := range intItems {
+			intItemsMap[item] = idx
+		}
 	}
 
 	beego.Debug(fmt.Sprintf("SQL %s VALS %#v", querySql, data))
@@ -403,16 +428,27 @@ func FindFirstInMysql(myDbCon *sql.DB, querySql string, data ...interface{}) (ma
 	for i := range values {
 		scanArgs[i] = &values[i]
 	}
-	var records = make([]map[string]string, 0, 10)
+	var records = make([]map[string]interface{}, 0, 10)
+	var itemVal string
 	for rows.Next() {
 		err = rows.Scan(scanArgs...)
-		record := make(map[string]string)
+		record := make(map[string]interface{})
 		for i, col := range values {
+			itemVal = ""
 			switch col.(type) {
 			case []uint8:
-				record[columns[i]] = string(col.([]uint8))
+				itemVal = string(col.([]uint8))
 			case int64:
-				record[columns[i]] = fmt.Sprint(col.(int64))
+				itemVal = fmt.Sprint(col.(int64))
+			}
+
+			if _, ok := intItemsMap[columns[i]]; ok {
+				record[columns[i]], err = strkit.StrToInt(itemVal)
+				if err != nil {
+					return nil, logiccode.DbItemToIntErrorCode()
+				}
+			} else {
+				record[columns[i]] = itemVal
 			}
 		}
 		if len(record) > 0 {
@@ -432,7 +468,9 @@ func FindFirstInMysql(myDbCon *sql.DB, querySql string, data ...interface{}) (ma
 // @param pageSize		每页显示几条记录,最多100条
 // @param selectSql		查询SQL
 // @param sqlExceptSelect	查询SQL条件
-func PaginateInMysql(myDbCon *sql.DB, pageNumber int, pageSize int, selectSql string, sqlExceptSelect string, data ...interface{}) (Page, error) {
+// @param intItems	需要转换成Int类型的字段集合
+// @param data		WHERE条件字段值记录
+func PaginateInMysql(myDbCon *sql.DB, pageNumber int, pageSize int, selectSql string, sqlExceptSelect string, intItems []string, data ...interface{}) (Page, error) {
 	if myDbCon == nil {
 		return Page{}, logiccode.DbConErrorCode()
 	}
@@ -444,14 +482,14 @@ func PaginateInMysql(myDbCon *sql.DB, pageNumber int, pageSize int, selectSql st
 	//统计记录总数
 	totalRowSqlBuilder := strkit.StringBuilder{}
 	totalRowSqlBuilder.Append("SELECT COUNT(*) AS count ").Append(sqlExceptSelect)
-	totalRowResult, err := FindFirstInMysql(myDbCon, totalRowSqlBuilder.ToString(), data...)
+	totalRowResult, err := FindFirstInMysql(myDbCon, totalRowSqlBuilder.ToString(), []string{"count"}, data...)
 
 	if err != nil {
 		return Page{}, err
 	}
 
-	totalRow, err := strconv.Atoi(totalRowResult["count"])
-	if err != nil {
+	totalRow, ok := interface{}(totalRowResult["count"]).(int)
+	if !ok {
 		beego.Error(fmt.Sprintf("%v", err))
 		return Page{}, logiccode.DbPageCountToIntCode()
 	}
@@ -471,7 +509,7 @@ func PaginateInMysql(myDbCon *sql.DB, pageNumber int, pageSize int, selectSql st
 
 	pageSqlBuilder := strkit.StringBuilder{}
 	pageSqlBuilder.Append(selectSql).Append(" ").Append(sqlExceptSelect).Append(" LIMIT ").Append(strconv.Itoa(offset)).Append(", ").Append(strconv.Itoa(pageSize))
-	pageResult, err := FindInMysql(myDbCon, pageSqlBuilder.ToString(), data...)
+	pageResult, err := FindInMysql(myDbCon, pageSqlBuilder.ToString(), intItems, data...)
 	if err != nil {
 		return Page{}, err
 	}
