@@ -18,8 +18,8 @@ func New(code int, msg string) error {
 // 		100<XXX<=200: 	代表logic层错误;
 // 		200<XXX<=300: 	代表controller层错误;
 type LogicCode struct {
-	Code int `json:"code" desc:"业务错误码"`
-	Msg string `json:"msg" desc:"错误描述"`
+	Code int    `json:"code" desc:"业务错误码"`
+	Msg  string `json:"msg" desc:"错误描述"`
 }
 
 func (code *LogicCode) Error() string {
@@ -95,6 +95,6 @@ func DbItemToIntErrorCode() error {
 
 // @Title 请求参数值错误
 // @Description 用于反射请求参数对象、参数值类型转换、必填参数校验错误反馈
-func ReqParamErrorCode() error  {
+func ReqParamErrorCode() error {
 	return New(100301, "param value error")
 }
