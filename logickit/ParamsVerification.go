@@ -1,4 +1,4 @@
-package common
+package logickit
 
 import ()
 import (
@@ -17,6 +17,7 @@ func VerificationCompanyId(companyId int) bool {
 	return true
 }
 
+// 校验售货机ID
 func VerificationSVmId(svmId int) bool {
 	if !(23456 <= svmId) {
 		beego.Error("售货机ID错误", fmt.Sprintf("售货机ID：%v", svmId))
@@ -25,6 +26,7 @@ func VerificationSVmId(svmId int) bool {
 	return true
 }
 
+// 校验公司类型
 func VerificationCompCategory(companyCategory int) bool {
 	if !(companyCategory == constant.COMPANY_CATEGORY_PLATFORM ||
 		companyCategory == constant.COMPANY_CATEGORY_SERVICE ||
@@ -35,6 +37,7 @@ func VerificationCompCategory(companyCategory int) bool {
 	return true
 }
 
+// 校验公司权限类型
 func VerificationCompAccessCategory(companyCategory int) bool {
 	if !(companyCategory == 0 ||
 		companyCategory == constant.COMPANY_CATEGORY_PLATFORM ||
@@ -46,6 +49,7 @@ func VerificationCompAccessCategory(companyCategory int) bool {
 	return true
 }
 
+// 校验权限ID
 func VerificationAccessId(accessId int) bool {
 	if accessId < 100000 || accessId > 999999 {
 		beego.Error("权限ID错误", fmt.Sprintf("权限ID：%v", accessId))
@@ -54,6 +58,7 @@ func VerificationAccessId(accessId int) bool {
 	return true
 }
 
+// 校验权限父ID
 func VerificationAccessPId(accessPId int) bool {
 	if (accessPId < 100000 && accessPId != 0) || accessPId > 999999 {
 		beego.Error("权限父ID错误", fmt.Sprintf("权限父ID：%v", accessPId))
@@ -62,6 +67,7 @@ func VerificationAccessPId(accessPId int) bool {
 	return true
 }
 
+// 校验登录密码
 func VerificationLoginPwd(pwd string) bool {
 	if len(pwd) != utf8.RuneCountInString(pwd) || len(pwd) < 8 {
 		beego.Error("密码格式错误", fmt.Sprintf("密码：%v", pwd))
@@ -70,6 +76,7 @@ func VerificationLoginPwd(pwd string) bool {
 	return true
 }
 
+// 校验手机号
 func VerificationPhone(phone string) bool {
 	if !(11 <= len(phone) && len(phone) <= 20) || len(phone) != utf8.RuneCountInString(phone) {
 		beego.Error("手机号码格式错误", fmt.Sprintf("手机号码：%v", phone))
@@ -102,6 +109,7 @@ func VerificationPageSize(size int) bool {
 	return true
 }
 
+// 校验普通折扣方案类型
 func VerificationDiscountType(discountType int) bool {
 	if !(discountType == 10 || discountType == 11 || discountType == 12 || discountType == 13) {
 		beego.Error("方案类型错误", fmt.Sprintf("类型：%v", discountType))
@@ -110,6 +118,7 @@ func VerificationDiscountType(discountType int) bool {
 	return true
 }
 
+// 校验方案状态
 func VerificationPlanStatus(status int) bool {
 	if !(status == 10 || status == 11 || status == 12 || status == 13) {
 		beego.Error("方案状态错误", fmt.Sprintf("方案状态：%v", status))
@@ -118,6 +127,7 @@ func VerificationPlanStatus(status int) bool {
 	return true
 }
 
+// 校验虚拟商品方案类型
 func VerificationVgoodsType(vgoodsType int) bool {
 	// '扫码虚拟商品：11，套餐虚拟商品：12，惊喜虚拟商品：13'
 	if !( vgoodsType == 11 || vgoodsType == 12 || vgoodsType == 13) {

@@ -1,4 +1,4 @@
-package common
+package logickit
 
 import (
 	"strings"
@@ -6,13 +6,12 @@ import (
 	"github.com/astaxie/beego/httplib"
 	"github.com/astaxie/beego"
 	"net/http"
-	"git.gumpcome.com/goods_mgr/constant"
 	"git.gumpcome.com/goods_mgr/httpprotocol"
 )
 
 // 批量更新售货机版本号
 // return:是否成功，更新版本号失败的售货机id
-func ConfigVersionBatchUpdate(svmIds []int) (bool, []int) {
+func ConfigVersionBatchUpdate(url string,svmIds []int) (bool, []int) {
 	// 批量修改售货机版本号可放置售货机的最大数量
 	batchEditSvmIdNum := 50
 	forNum := len(svmIds) / batchEditSvmIdNum
@@ -31,7 +30,7 @@ func ConfigVersionBatchUpdate(svmIds []int) (bool, []int) {
 			svmidsBatch = svmIds[(i - 1) * batchEditSvmIdNum : batchEditSvmIdNum]
 		}
 		svmIdStr := strings.Replace(strings.Replace(strings.Replace(fmt.Sprint(svmidsBatch), " ", ",", batchEditSvmIdNum), "[", "", 1), "]", "", 1)
-		req := httplib.Post(constant.BatchUpdateConfigVersion)
+		req := httplib.Post(url)
 		req.Param("svm_ids", svmIdStr)
 		resp := httpprotocol.RespBatchUpdateSvmConfigVersion{}
 		if err := req.ToJSON(&resp); err != nil {

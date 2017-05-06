@@ -1,4 +1,4 @@
-package common
+package logickit
 
 import (
 	"github.com/astaxie/beego/httplib"
@@ -6,14 +6,13 @@ import (
 	"github.com/astaxie/beego"
 	"git.gumpcome.com/go_kit/logiccode"
 	"net/http"
-	"git.gumpcome.com/goods_mgr/constant"
 	"git.gumpcome.com/goods_mgr/httpprotocol"
 	"fmt"
 )
 
 // 账户售货机鉴权
-func AccountSvmAuth(accountId, svmId int) (bool, error) {
-	req := httplib.Post(constant.AccountSvmAuthUrl)
+func AccountSvmAuth(url string, accountId, svmId int) (bool, error) {
+	req := httplib.Post(url)
 	req.Param("account_id", strconv.Itoa(accountId))
 	req.Param("svm_id", strconv.Itoa(svmId))
 	respAuth := httpprotocol.RespAccountSvmAuth{}
