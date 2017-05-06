@@ -6,12 +6,21 @@ import (
 	"github.com/astaxie/beego/httplib"
 	"github.com/astaxie/beego"
 	"net/http"
-	"git.gumpcome.com/goods_mgr/httpprotocol"
 )
 
 // 批量更新售货机版本号
+type RespBatchUpdateSvmConfigVersion struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+	Data struct {
+		     IsAllSuccess string   `json:"is_all_success" desc:"Y:全部成功，N:全部失败"`
+		     FailSvms     []int    `json:"fail_svms" desc:"版本号更新失败的售货机id集合"`
+	     } `json:"data"`
+}
+
+// 批量更新售货机版本号
 // return:是否成功，更新版本号失败的售货机id
-func ConfigVersionBatchUpdate(url string,svmIds []int) (bool, []int) {
+func ConfigVersionBatchUpdate(url string, svmIds []int) (bool, []int) {
 	// 批量修改售货机版本号可放置售货机的最大数量
 	batchEditSvmIdNum := 50
 	forNum := len(svmIds) / batchEditSvmIdNum
@@ -32,7 +41,7 @@ func ConfigVersionBatchUpdate(url string,svmIds []int) (bool, []int) {
 		svmIdStr := strings.Replace(strings.Replace(strings.Replace(fmt.Sprint(svmidsBatch), " ", ",", batchEditSvmIdNum), "[", "", 1), "]", "", 1)
 		req := httplib.Post(url)
 		req.Param("svm_ids", svmIdStr)
-		resp := httpprotocol.RespBatchUpdateSvmConfigVersion{}
+		resp := RespBatchUpdateSvmConfigVersion{}
 		if err := req.ToJSON(&resp); err != nil {
 			// 结构体转义失败
 			beego.Error(err, svmidsBatch)

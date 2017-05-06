@@ -8,6 +8,13 @@ import (
 	"git.gumpcome.com/svm_mgr/constant"
 )
 
+const (
+	// 公司类型
+	COMPANY_CATEGORY_PLATFORM = 100 // 平台
+	COMPANY_CATEGORY_SERVICE  = 200 // 服务商
+	COMPANY_CATEGORY_OPERATOR = 300 // 运营商
+)
+
 // 校验公司号
 func VerificationCompanyId(companyId int) bool {
 	if !(10000 <= companyId && companyId <= 99999) {
@@ -28,9 +35,9 @@ func VerificationSVmId(svmId int) bool {
 
 // 校验公司类型
 func VerificationCompCategory(companyCategory int) bool {
-	if !(companyCategory == constant.COMPANY_CATEGORY_PLATFORM ||
-		companyCategory == constant.COMPANY_CATEGORY_SERVICE ||
-		companyCategory == constant.COMPANY_CATEGORY_OPERATOR) {
+	if !(companyCategory == COMPANY_CATEGORY_PLATFORM ||
+		companyCategory == COMPANY_CATEGORY_SERVICE ||
+		companyCategory == COMPANY_CATEGORY_OPERATOR) {
 		beego.Error("公司类型错误", fmt.Sprintf("公司类型=%v", companyCategory))
 		return false
 	}
@@ -40,9 +47,9 @@ func VerificationCompCategory(companyCategory int) bool {
 // 校验公司权限类型
 func VerificationCompAccessCategory(companyCategory int) bool {
 	if !(companyCategory == 0 ||
-		companyCategory == constant.COMPANY_CATEGORY_PLATFORM ||
-		companyCategory == constant.COMPANY_CATEGORY_SERVICE ||
-		companyCategory == constant.COMPANY_CATEGORY_OPERATOR) {
+		companyCategory == COMPANY_CATEGORY_PLATFORM ||
+		companyCategory == COMPANY_CATEGORY_SERVICE ||
+		companyCategory == COMPANY_CATEGORY_OPERATOR) {
 		beego.Error("公司权限类型错误", fmt.Sprintf("公司权限类型=%v", companyCategory))
 		return false
 	}
