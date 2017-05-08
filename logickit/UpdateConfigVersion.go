@@ -68,7 +68,6 @@ func ConfigVersionBatchUpdate(url string, svmIds []int) (bool, []int) {
 	return isOk, failureSvmIds
 }
 
-
 //单个更新售货机版本号
 func ConfigVersionUpdate(url string,svmId int) (bool, int) {
 	httpClient := httplib.Post(url)
