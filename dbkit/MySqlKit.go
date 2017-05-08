@@ -388,7 +388,7 @@ func FindInMysql(myDbCon *sql.DB, querySql string, intItems []string, data ...in
 	return records, err
 }
 
-// @Title 查询单挑数据
+// @Title 查询单条数据
 // @Description data保存的参数值必须与查询SQL语句WHERE条件需要的字段顺序一致,如果查询SQL影响的行数多与1行,必须追加 LIMIT 1 条件
 // @param myDbCon 	数据库连接
 // @param sql		查询SQL语句
@@ -488,9 +488,8 @@ func PaginateInMysql(myDbCon *sql.DB, pageNumber int, pageSize int, selectSql st
 		return Page{}, err
 	}
 
-	totalRow, ok := interface{}(totalRowResult["count"]).(int)
+	totalRow, ok := totalRowResult["count"].(int)
 	if !ok {
-		beego.Error(fmt.Sprintf("%v", err))
 		return Page{}, logiccode.DbPageCountToIntCode()
 	}
 
