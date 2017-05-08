@@ -1,17 +1,15 @@
 package logickit
 
-import ()
 import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"unicode/utf8"
-	"git.gumpcome.com/svm_mgr/constant"
 )
 
 const (
 	// 公司类型
 	COMPANY_CATEGORY_PLATFORM = 100 // 平台
-	COMPANY_CATEGORY_SERVICE  = 200 // 服务商
+	COMPANY_CATEGORY_SERVICE = 200 // 服务商
 	COMPANY_CATEGORY_OPERATOR = 300 // 运营商
 )
 
@@ -24,6 +22,18 @@ func VerificationCompanyId(companyId int) bool {
 	return true
 }
 
+// 校验公司类型
+func VerificationCompCategory(companyCategory int) bool {
+	if !(companyCategory == COMPANY_CATEGORY_PLATFORM ||
+		companyCategory == COMPANY_CATEGORY_SERVICE ||
+		companyCategory == COMPANY_CATEGORY_OPERATOR) {
+		beego.Error("公司类型错误", fmt.Sprintf("公司类型=%v", companyCategory))
+		return false
+	}
+	return true
+}
+
+
 // 校验售货机ID
 func VerificationSVmId(svmId int) bool {
 	if !(23456 <= svmId) {
@@ -33,12 +43,19 @@ func VerificationSVmId(svmId int) bool {
 	return true
 }
 
-// 校验公司类型
-func VerificationCompCategory(companyCategory int) bool {
-	if !(companyCategory == COMPANY_CATEGORY_PLATFORM ||
-		companyCategory == COMPANY_CATEGORY_SERVICE ||
-		companyCategory == COMPANY_CATEGORY_OPERATOR) {
-		beego.Error("公司类型错误", fmt.Sprintf("公司类型=%v", companyCategory))
+// 校验售货机销售状态
+func VerificationSVmSaleStatus(saleStatus int) bool {
+	if !( saleStatus == 10 || saleStatus == 11) {
+		beego.Error("校验售货机销售状态错误", fmt.Sprintf("售货机销售状态：%v", saleStatus))
+		return false
+	}
+	return true
+}
+
+// 校验售货机运营状态
+func VerificationSVmWorkStatus(workStatus int) bool {
+	if !( workStatus == 10 || workStatus == 11 || workStatus == 12) {
+		beego.Error("校验售货机运营状态错误", fmt.Sprintf("售货机运营状态：%v", workStatus))
 		return false
 	}
 	return true

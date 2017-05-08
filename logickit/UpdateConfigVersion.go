@@ -58,3 +58,7 @@ func ConfigVersionBatchUpdate(url string, svmIds []int) (bool, []int) {
 }
 
 
+func ConfigVersionUpdate(url string, svmId int) (bool, error) {
+	return false, nil
+}
+
