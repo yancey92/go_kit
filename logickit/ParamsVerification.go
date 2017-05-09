@@ -183,3 +183,12 @@ func VerificationVgoodsType(vgoodsType int) bool {
 	}
 	return true
 }
+
+// 校验url
+func VerificationUrl(url string) bool {
+	if utf8.RuneCountInString(url) > 150 {
+		beego.Error("url长度大于150", fmt.Sprintf("url长度：%v", utf8.RuneCountInString(url)))
+		return false
+	}
+	return true
+}
