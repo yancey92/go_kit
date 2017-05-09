@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"unicode/utf8"
+	"strconv"
 )
 
 const (
@@ -35,7 +36,7 @@ func VerificationCompCategory(companyCategory int) bool {
 
 
 // 校验售货机ID
-func VerificationSVmId(svmId int) bool {
+func VerificationSvmId(svmId int) bool {
 	if !(23456 <= svmId) {
 		beego.Error("售货机ID错误", fmt.Sprintf("售货机ID：%v", svmId))
 		return false
@@ -44,7 +45,7 @@ func VerificationSVmId(svmId int) bool {
 }
 
 // 校验售货机销售状态
-func VerificationSVmSaleStatus(saleStatus int) bool {
+func VerificationSvmSaleStatus(saleStatus int) bool {
 	if !( saleStatus == 10 || saleStatus == 11) {
 		beego.Error("校验售货机销售状态错误", fmt.Sprintf("售货机销售状态：%v", saleStatus))
 		return false
@@ -53,13 +54,26 @@ func VerificationSVmSaleStatus(saleStatus int) bool {
 }
 
 // 校验售货机运营状态
-func VerificationSVmWorkStatus(workStatus int) bool {
+func VerificationSvmWorkStatus(workStatus int) bool {
 	if !( workStatus == 10 || workStatus == 11 || workStatus == 12) {
 		beego.Error("校验售货机运营状态错误", fmt.Sprintf("售货机运营状态：%v", workStatus))
 		return false
 	}
 	return true
 }
+
+// 校验售货机经（纬）度
+func VerificationSvmLonOrLat(lonOrLat string) bool {
+	if ( utf8.RuneCountInString(lonOrLat) > 15 ) {
+		beego.Error("售货机经度或维度长度错误", fmt.Sprintf("售货机经度或维度：%v", lonOrLat))
+		return false
+	} else if _, err := strconv.ParseFloat(lonOrLat, 10); err != nil {
+		beego.Error("售货机经度或维度格式错误", fmt.Sprintf("售货机经度或维度：%v", lonOrLat))
+		return false
+	}
+	return true
+}
+
 
 // 校验公司权限类型
 func VerificationCompAccessCategory(companyCategory int) bool {
@@ -95,6 +109,15 @@ func VerificationAccessPId(accessPId int) bool {
 func VerificationLoginPwd(pwd string) bool {
 	if len(pwd) != utf8.RuneCountInString(pwd) || len(pwd) < 8 {
 		beego.Error("密码格式错误", fmt.Sprintf("密码：%v", pwd))
+		return false
+	}
+	return true
+}
+
+// 校验登录账号
+func VerificationLoginName(loginName string) bool {
+	if len(loginName) != utf8.RuneCountInString(loginName) || len(loginName) < 6 {
+		beego.Error("账号格式错误", fmt.Sprintf("账号：%v", loginName))
 		return false
 	}
 	return true
