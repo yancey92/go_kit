@@ -34,6 +34,14 @@ func VerificationCompCategory(companyCategory int) bool {
 	return true
 }
 
+// 校验支付方式
+func VerificationPayWay(payWay int) bool {
+	if !(0 <= payWay&& payWay <= 11) {
+		beego.Error("支付方式错误", fmt.Sprintf("支付方式=%v", payWay))
+		return false
+	}
+	return true
+}
 
 // 校验售货机ID
 func VerificationSvmId(svmId int) bool {
@@ -73,7 +81,6 @@ func VerificationSvmLonOrLat(lonOrLat string) bool {
 	}
 	return true
 }
-
 
 // 校验公司权限类型
 func VerificationCompAccessCategory(companyCategory int) bool {
@@ -132,6 +139,7 @@ func VerificationPhone(phone string) bool {
 	return true
 }
 
+// 校验是否
 func VerificationIsNo(isOrNo string) bool {
 	if !(isOrNo == "Y" || isOrNo == "N") {
 		beego.Error("Y/N格式错误", fmt.Sprintf("Y/N：%v", isOrNo))
@@ -140,6 +148,7 @@ func VerificationIsNo(isOrNo string) bool {
 	return true
 }
 
+// 校验页码
 func VerificationPageNumber(number int) bool {
 	if !(0 <= number && number <= 1000000) {
 		beego.Error("页码错误", fmt.Sprintf("页码：%v", number))
@@ -148,6 +157,7 @@ func VerificationPageNumber(number int) bool {
 	return true
 }
 
+// 校验页面展示数量
 func VerificationPageSize(size int) bool {
 	if !(0 <= size && size <= 50) {
 		beego.Error("页面展示数目错误", fmt.Sprintf("页面展示数目：%v", size))
