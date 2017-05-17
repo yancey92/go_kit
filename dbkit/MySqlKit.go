@@ -9,6 +9,7 @@ import (
 	"github.com/astaxie/beego"
 	_ "github.com/go-sql-driver/mysql"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -370,9 +371,13 @@ func FindInMysql(myDbCon *sql.DB, querySql string, intItems []string, data ...in
 			}
 
 			if _, ok := intItemsMap[columns[i]]; ok {
-				record[columns[i]], err = strkit.StrToInt(itemVal)
-				if err != nil {
-					return nil, logiccode.DbItemToIntErrorCode()
+				if strings.TrimSpace(itemVal) != "" {
+					record[columns[i]], err = strkit.StrToInt(itemVal)
+					if err != nil {
+						return nil, logiccode.DbItemToIntErrorCode()
+					}
+				} else {
+					record[columns[i]] = 0
 				}
 			} else {
 				record[columns[i]] = itemVal
