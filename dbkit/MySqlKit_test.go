@@ -129,8 +129,9 @@ func TestDeleteInMysql(t *testing.T) {
 }
 
 func TestFindInMysql(t *testing.T) {
-	sql := `SELECT name AS user_name, age As user_age FROM user LIMIT 1`
-	intItems := []string{"user_age"}
+	//sql := `SELECT name AS user_name, age As user_age FROM user LIMIT 1`
+	sql := `SELECT t1.id, t1.age, t2.content, t2.unixtime FROM user t1 LEFT JOIN user_address t2 ON t2.userid = t1.id;`;
+	intItems := []string{"user_age", "unixtime"}
 	result, err := FindInMysql(GetConn(), sql, intItems)
 	if err != nil {
 		fmt.Printf("%v", err)
