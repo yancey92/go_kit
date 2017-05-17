@@ -6,6 +6,7 @@ import (
 	"github.com/astaxie/beego/httplib"
 	"github.com/astaxie/beego"
 	"net/http"
+	"strconv"
 )
 
 // 批量更新售货机版本号
@@ -17,6 +18,16 @@ type RespBatchUpdateSvmConfigVersion struct {
 		     FailSvms     []int    `json:"fail_svms" desc:"版本号更新失败的售货机id集合"`
 	     } `json:"data"`
 }
+// 更新单个售货机版本号
+type RespUpdateSvmConfigVersion struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+	Data struct {
+		     IsSuccess string   `json:"is_success" desc:"Y：更新成功，N：更新失败"`
+		     SvmId     int    `json:"svm_id" desc:"版本号更新失败的售货机id"`
+	     } `json:"data"`
+}
+
 
 // 批量更新售货机版本号
 // return:是否成功，更新版本号失败的售货机id
@@ -57,4 +68,20 @@ func ConfigVersionBatchUpdate(url string, svmIds []int) (bool, []int) {
 	return isOk, failureSvmIds
 }
 
-
+//单个更新售货机版本号
+func ConfigVersionUpdate(url string,svmId int) (bool, int) {
+	httpClient := httplib.Post(url)
+	httpClient.Param("svm_id", strconv.Itoa(svmId))
+	httpClient.String()
+	resp := RespUpdateSvmConfigVersion{}
+	if err := httpClient.ToJSON(&resp); err != nil {
+		// 结构体转义失败
+		beego.Error("更新单个售货机版本号返回体解析错误svmid=:", svmId)
+		return  false,svmId
+	}
+	if resp.Code != http.StatusOK  || resp.Data.IsSuccess != "Y"{
+		beego.Error("更新单个售货机版本号失败", fmt.Sprintf("%#v",resp))
+		return  false,svmId
+	}
+	return  true,svmId
+}
