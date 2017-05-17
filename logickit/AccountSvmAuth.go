@@ -20,9 +20,7 @@ type RespAccountSvmAuth struct {
 
 // 账户售货机鉴权
 func AccountSvmAuth(url string, accountId, svmId int) (bool, error) {
-	req := httplib.Post(url)
-	req.Param("account_id", strconv.Itoa(accountId))
-	req.Param("svm_id", strconv.Itoa(svmId))
+	req := httplib.Post(url).Param("account_id", strconv.Itoa(accountId)).Param("svm_id", strconv.Itoa(svmId))
 	respAuth := RespAccountSvmAuth{}
 	if err := req.ToJSON(&respAuth); err != nil {
 		beego.Error("账户下某设备的鉴权失败", err)
