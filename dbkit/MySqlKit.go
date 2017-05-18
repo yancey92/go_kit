@@ -9,6 +9,7 @@ import (
 	"github.com/astaxie/beego"
 	_ "github.com/go-sql-driver/mysql"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -339,7 +340,8 @@ func FindInMysql(myDbCon *sql.DB, querySql string, intItems []string, data ...in
 
 	rows, err := myDbCon.Query(querySql, data...)
 
-	if err == sql.ErrNoRows { //没有查到结果
+	if err == sql.ErrNoRows {
+		//没有查到结果
 		return nil, nil
 	}
 	if err != nil {
@@ -348,7 +350,7 @@ func FindInMysql(myDbCon *sql.DB, querySql string, intItems []string, data ...in
 	}
 
 	defer rows.Close()
-rows.Scan()
+
 	columns, _ := rows.Columns()
 	scanArgs := make([]interface{}, len(columns))
 	values := make([]interface{}, len(columns))
@@ -370,9 +372,14 @@ rows.Scan()
 			}
 
 			if _, ok := intItemsMap[columns[i]]; ok {
-				record[columns[i]], err = strkit.StrToInt(itemVal)
-				if err != nil {
-					return nil, logiccode.DbItemToIntErrorCode()
+				if strings.TrimSpace(itemVal) != "" {
+					record[columns[i]], err = strkit.StrToInt(itemVal)
+					if err != nil {
+						beego.Error(fmt.Sprintf("item to int error :%#v", columns[i]))
+						return nil, logiccode.DbItemToIntErrorCode()
+					}
+				} else {
+					record[columns[i]] = 0
 				}
 			} else {
 				record[columns[i]] = itemVal
@@ -412,7 +419,8 @@ func FindFirstInMysql(myDbCon *sql.DB, querySql string, intItems []string, data 
 
 	rows, err := myDbCon.Query(querySql, data...)
 
-	if err == sql.ErrNoRows { //没有查到结果
+	if err == sql.ErrNoRows {
+		//没有查到结果
 		return nil, nil
 	}
 	if err != nil {
@@ -495,7 +503,7 @@ func PaginateInMysql(myDbCon *sql.DB, pageNumber int, pageSize int, selectSql st
 
 	//计算共多少页记录
 	totalPage := totalRow / pageSize
-	if totalRow%pageSize != 0 {
+	if totalRow % pageSize != 0 {
 		totalPage++
 	}
 
