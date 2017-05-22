@@ -349,7 +349,7 @@ func FindInMysql(myDbCon *sql.DB, querySql string, intItems []string, data ...in
 	}
 
 	defer rows.Close()
-rows.Scan()
+	rows.Scan()
 	columns, _ := rows.Columns()
 	scanArgs := make([]interface{}, len(columns))
 	values := make([]interface{}, len(columns))
