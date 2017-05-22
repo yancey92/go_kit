@@ -9,7 +9,7 @@ import (
 //redis 命令文档 http://doc.redisfans.com/
 
 func TestInitRedis(t *testing.T) {
-	InitRedis("traderedisdev.redis.cache.chinacloudapi.cn:6379", "mOuUcyvHCUtvEkakSIqthQIoXQhUc8JDyHA12G/VzkM=", 0)
+	InitRedis("localhost:6379", "", 0)
 }
 
 func TestRedisSetGetItem(t *testing.T) {
