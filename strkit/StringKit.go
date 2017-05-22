@@ -109,3 +109,23 @@ func (sb *StringBuilder) Append(str string) *StringBuilder {
 func (sb *StringBuilder) ToString() string {
 	return sb.buf.String()
 }
+
+
+// @Title 获取字符串长度
+// @Description
+// @param str ,start开始下标，结束下标（包含）
+//	SubStr("20170620120101", 0,6)
+// 	return 201706
+func SubStr(str string, start int, end int) string {
+	rs := []rune(str)
+	length := len(rs)
+
+	if start < 0 || start > length {
+		return ""
+	}
+
+	if end < 0 || end > length {
+		return ""
+	}
+	return string(rs[start:end])
+}
