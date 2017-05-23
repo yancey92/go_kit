@@ -95,6 +95,26 @@ func RedisGet(key string) (string, error) {
 	}
 }
 
+// 判断数据库是否存在该键
+// @key 	主键
+func RedisExists(key string) (bool, error) {
+	if key == "" {
+		return false, errors.New("redis set key or value is empty")
+	}
+	client := getRedisClient()
+	if client == nil {
+		return false, errors.New("redis client is nil")
+	}
+	result, err := client.Exists(key).Result()
+	if err != nil {
+		return false, err
+	}
+	if result == 0 {
+		return false, nil
+	}
+	return true, nil
+}
+
 // 获取Redis连接池状态
 func RedisGetPoolStats() (map[string]string, error) {
 	client := getRedisClient()

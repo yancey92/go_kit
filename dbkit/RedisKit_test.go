@@ -4,12 +4,13 @@ import (
 	"testing"
 	"time"
 	"strconv"
+	"fmt"
 )
 
 //redis 命令文档 http://doc.redisfans.com/
 
 func TestInitRedis(t *testing.T) {
-	InitRedis("localhost:6379", "", 0)
+	InitRedis("traderedisdev.redis.cache.chinacloudapi.cn:6379", "mOuUcyvHCUtvEkakSIqthQIoXQhUc8JDyHA12G/VzkM=", 0)
 }
 
 func TestRedisSetGetItem(t *testing.T) {
@@ -67,7 +68,7 @@ func TestRedisSetEXItem(t *testing.T) {
 }
 
 func TestBeathRedisSetEXItem(t *testing.T) {
-	InitRedis("traderedisdev.redis.cache.chinacloudapi.cn:6379", "mOuUcyvHCUtvEkakSIqthQIoXQhUc8JDyHA12G/VzkM=", 0)
+	InitRedis("127.0.0.1:6379", "", 0)
 
 	for i := 0; i < 20; i++ {
 		keyName := "key" + strconv.Itoa(i)
@@ -89,4 +90,38 @@ func TestBeathRedisSetEXItem(t *testing.T) {
 		result, _ := RedisGet(keyName)
 		t.Logf("读取成功 %s=%s\n", keyName, result)
 	}
+}
+
+func TestRedisExists(t *testing.T)  {
+	InitRedis("traderedisdev.redis.cache.chinacloudapi.cn:6379", "mOuUcyvHCUtvEkakSIqthQIoXQhUc8JDyHA12G/VzkM=", 0)
+
+	result, err := RedisExists("key10")
+	if err != nil {
+		t.Fail()
+	}
+	t.Logf("判断结果 %v\n", result)
+}
+
+func TestAutoRetryConn(t *testing.T)  {
+	InitRedis("127.0.0.1:6379", "", 0)
+	result, _ := RedisExists("key10")
+	fmt.Printf("判断结果 %v\n", result)
+
+	fmt.Println("休息10秒,关掉Redis")
+	time.Sleep(10 * time.Second)
+
+	result, err := RedisExists("key10")
+	if err != nil {
+		fmt.Printf("断开连接 %v\n", err)
+	}
+	fmt.Printf("判断结果 %v\n", result)
+
+	fmt.Println("再休息10秒,启动Redis")
+	time.Sleep(10 * time.Second)
+
+	result, err = RedisExists("key10")
+	if err != nil {
+		fmt.Printf("断开连接 %v\n", err)
+	}
+	fmt.Printf("判断结果 %v\n", result)
 }
