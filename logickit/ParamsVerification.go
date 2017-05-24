@@ -23,6 +23,15 @@ func VerificationCompanyId(companyId int) bool {
 	return true
 }
 
+// 校验【查询服务商运营商关系】查询方式
+func VerificationOwnerQueryType(queryType int) bool {
+	if !(queryType == 0 || queryType == 10 || queryType == 11) {
+		beego.Error("查询服务商运营商关系:查询方式错误", fmt.Sprintf("query_type：%v", queryType))
+		return false
+	}
+	return true
+}
+
 // 校验公司类型
 func VerificationCompCategory(companyCategory int) bool {
 	if !(companyCategory == COMPANY_CATEGORY_PLATFORM ||
