@@ -202,3 +202,12 @@ func VerificationUrl(url string) bool {
 	}
 	return true
 }
+
+// 校验售货机拉去
+func VerificationLatestConfigAction(action int) bool {
+	if !(action==10 || action==11) {
+		beego.Error("售货机拉去配置action状态值错误", fmt.Sprintf("action：%v", action))
+		return false
+	}
+	return true
+}
