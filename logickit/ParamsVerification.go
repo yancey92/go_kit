@@ -132,7 +132,7 @@ func VerificationLoginPwd(pwd string) bool {
 
 // 校验登录账号
 func VerificationLoginName(loginName string) bool {
-	if len(loginName) != utf8.RuneCountInString(loginName) || len(loginName) < 6 {
+	if len(loginName) != utf8.RuneCountInString(loginName) || len(loginName) < 6 || len(loginName) > 30 {
 		beego.Error("账号格式错误", fmt.Sprintf("账号：%v", loginName))
 		return false
 	}
@@ -214,7 +214,7 @@ func VerificationUrl(url string) bool {
 
 // 校验售货机拉去
 func VerificationLatestConfigAction(action int) bool {
-	if !(action==10 || action==11) {
+	if !(action == 10 || action == 11) {
 		beego.Error("售货机拉去配置action状态值错误", fmt.Sprintf("action：%v", action))
 		return false
 	}
