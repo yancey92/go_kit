@@ -1,17 +1,17 @@
 package dbkit
 
 import (
-	"github.com/go-redis/redis"
-	"time"
-	"strings"
 	"fmt"
-	"errors"
+	"github.com/go-redis/redis"
 	"strconv"
+	"strings"
+	"time"
+	"git.gumpcome.com/go_kit/logiccode"
 )
 
 var (
 	redisClient *redis.Client
-	inited bool
+	redisInited bool
 )
 
 // 初始化Redis连接池
@@ -19,24 +19,24 @@ var (
 // @passad 	数据库密码,如果没有密码,填空
 // @dbNum 	数据库名称,只能选择0~16之间
 func InitRedis(addr string, passwd string, dbNum int) {
-	if inited || redisClient != nil {
+	if redisInited || redisClient != nil {
 		return
 	}
-	if addr == ""{
+	if addr == "" {
 		panic("redis addr is empty!")
 	}
 	if dbNum < 0 || dbNum > 16 {
 		panic("redis dbNum is error!")
 	}
 	redisClient = redis.NewClient(&redis.Options{
-		Addr:		addr,
-		Password: 	passwd, //如果没有密码,默认为空
-		DB: 		dbNum, //默认选择0数据库
-		MaxRetries: 	3, //连接失败后重试3次
-		DialTimeout: 	10 * time.Second, //拨号超时
-		WriteTimeout: 	5 * time.Second, //写超时
-		PoolSize: 	10, //最大连接数
-		IdleTimeout: 	200 * time.Second,
+		Addr:         addr,
+		Password:     passwd,           //如果没有密码,默认为空
+		DB:           dbNum,            //默认选择0数据库
+		MaxRetries:   3,                //连接失败后重试3次
+		DialTimeout:  10 * time.Second, //拨号超时
+		WriteTimeout: 5 * time.Second,  //写超时
+		PoolSize:     10,               //最大连接数
+		IdleTimeout:  200 * time.Second,
 	})
 
 	pong, err := redisClient.Ping().Result()
@@ -46,7 +46,7 @@ func InitRedis(addr string, passwd string, dbNum int) {
 	if strings.ToUpper(pong) != "PONG" {
 		panic("redis conn return is not pong")
 	}
-	inited = true
+	redisInited = true
 }
 
 // 向数据库中添加键值对内容,无过期时间
@@ -62,11 +62,11 @@ func RedisSet(key string, value string) error {
 // @sec		过期时间,单位秒,0:永不过期
 func RedisSetWithExpire(key string, value string, sec time.Duration) error {
 	if key == "" || value == "" {
-		return errors.New("redis set key or value is empty")
+		return logiccode.RedisParamsErrorCode()
 	}
 	client := getRedisClient()
 	if client == nil {
-		return errors.New("redis client is nil")
+		return logiccode.RedisClientErrorCode()
 	}
 	err := client.Set(key, value, sec).Err()
 	if err != nil {
@@ -79,15 +79,15 @@ func RedisSetWithExpire(key string, value string, sec time.Duration) error {
 // @key 	主键
 func RedisGet(key string) (string, error) {
 	if key == "" {
-		return "", errors.New("redis set key or value is empty")
+		return "", logiccode.RedisParamsErrorCode()
 	}
 	client := getRedisClient()
 	if client == nil {
-		return "", errors.New("redis client is nil")
+		return "", logiccode.RedisClientErrorCode()
 	}
 	result, err := client.Get(key).Result()
 	if err == redis.Nil {
-		return "", errors.New("redis get key does not exists")
+		return "", logiccode.RedisKeyErrorCode()
 	} else if err != nil {
 		return "", err
 	} else {
@@ -99,11 +99,11 @@ func RedisGet(key string) (string, error) {
 // @key 	主键
 func RedisExists(key string) (bool, error) {
 	if key == "" {
-		return false, errors.New("redis set key or value is empty")
+		return false, logiccode.RedisParamsErrorCode()
 	}
 	client := getRedisClient()
 	if client == nil {
-		return false, errors.New("redis client is nil")
+		return false, logiccode.RedisClientErrorCode()
 	}
 	result, err := client.Exists(key).Result()
 	if err != nil {
@@ -119,7 +119,7 @@ func RedisExists(key string) (bool, error) {
 func RedisGetPoolStats() (map[string]string, error) {
 	client := getRedisClient()
 	if client == nil {
-		return nil, errors.New("redis client is nil")
+		return nil, logiccode.RedisClientErrorCode()
 	}
 	stats := make(map[string]string)
 	poolStats := client.PoolStats()
@@ -137,7 +137,7 @@ func RedisGetPoolStats() (map[string]string, error) {
 }
 
 func getRedisClient() *redis.Client {
-	if !inited || redisClient == nil {
+	if !redisInited || redisClient == nil {
 		return nil
 	}
 	return redisClient
