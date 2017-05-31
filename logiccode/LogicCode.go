@@ -93,6 +93,51 @@ func DbItemToIntErrorCode() error {
 	return New(100011, "db item to int error")
 }
 
+// @Title 连接Mongo数据库错误
+func MongoConnErrorCode() error {
+	return New(100012, "mongo conn error")
+}
+
+// @Title Mongo Session 克隆错误
+func MongoSessionCloneErrorCode() error {
+	return New(100013, "mongo seesion clone error")
+}
+
+// @Title Mongo Session 初始化错误
+func MongoSessionErrorCode() error {
+	return New(100014, "mongo is not inited or session is nil")
+}
+
+// @Title Mongo 搜索条件为空
+func MongoParamsErrorCode() error {
+	return New(100015, "mongo params is nil")
+}
+
+// @Title Mongo 添加或者更新操作错误
+func MongoUpsertErrorCode(err error) error {
+	return New(100016, err.Error())
+}
+
+// @Title Mongo 删除操作错误
+func MongoRemoveErrorCode(err error) error {
+	return New(100017, err.Error())
+}
+
+// @Title Redis Key 不存在
+func RedisKeyErrorCode() error {
+	return New(100018, "redis get key does not exists")
+}
+
+// @Title Redis client 错误
+func RedisClientErrorCode() error {
+	return New(100019, "redis client is nil")
+}
+
+// @Title Redis 参数错误
+func RedisParamsErrorCode() error  {
+	return New(100020, "redis params is empty")
+}
+
 // @Title 请求参数值错误
 // @Description 用于反射请求参数对象、参数值类型转换、必填参数校验错误反馈
 func ReqParamErrorCode() error {
