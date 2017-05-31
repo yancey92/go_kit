@@ -177,7 +177,7 @@ func VerificationPageSize(size int) bool {
 
 // 校验普通折扣方案类型
 func VerificationDiscountType(discountType int) bool {
-	if !(discountType == 10 || discountType == 11 || discountType == 12 || discountType == 13) {
+	if !(discountType == Goods_Plan_Svm || discountType == Goods_Plan_Present || discountType == Goods_Plan_Single || discountType == Goods_Plan_Many) {
 		beego.Error("方案类型错误", fmt.Sprintf("类型：%v", discountType))
 		return false
 	}
@@ -196,7 +196,7 @@ func VerificationPlanStatus(status int) bool {
 // 校验虚拟商品方案类型
 func VerificationVgoodsType(vgoodsType int) bool {
 	// '扫码虚拟商品：11，套餐虚拟商品：12，惊喜虚拟商品：13'
-	if !( vgoodsType == 11 || vgoodsType == 12 || vgoodsType == 13) {
+	if !( vgoodsType == Vgoods_Plan_Qrcode || vgoodsType == Vgoods_Plan_Package || vgoodsType == Vgoods_Plan_Surprise) {
 		beego.Error("虚拟商品方案类型错误", fmt.Sprintf("虚拟商品方案类型：%v", vgoodsType))
 		return false
 	}
