@@ -45,13 +45,13 @@ func GetCommonDiscountPlanCode(planType int, companyId int) (string, error) {
 	var err error
 	switch planType {
 	case Goods_Plan_Svm:
-		code, err = planCodeBuild(Code_Goods_Plan_Svm, companyId)
+		code, err = PlanCodeBuild(Code_Goods_Plan_Svm, companyId)
 	case Goods_Plan_Present:
-		code, err = planCodeBuild(Code_Goods_Plan_Present, companyId)
+		code, err = PlanCodeBuild(Code_Goods_Plan_Present, companyId)
 	case Goods_Plan_Single:
-		code, err = planCodeBuild(Code_Goods_Plan_Single, companyId)
+		code, err = PlanCodeBuild(Code_Goods_Plan_Single, companyId)
 	case Goods_Plan_Many:
-		code, err = planCodeBuild(Code_Goods_Plan_Many, companyId)
+		code, err = PlanCodeBuild(Code_Goods_Plan_Many, companyId)
 	default:
 		return "", logiccode.New(100301, "方案类型错误")
 	}
@@ -67,11 +67,11 @@ func GetComplexPlanCode(planType int, companyId int) (string, error) {
 	var err error
 	switch planType {
 	case Vgoods_Plan_Qrcode:
-		code, err = planCodeBuild(Code_Vgoods_Plan_Qrcode, companyId)
+		code, err = PlanCodeBuild(Code_Vgoods_Plan_Qrcode, companyId)
 	case Vgoods_Plan_Package:
-		code, err = planCodeBuild(Code_Vgoods_Plan_Package, companyId)
+		code, err = PlanCodeBuild(Code_Vgoods_Plan_Package, companyId)
 	case Vgoods_Plan_Surprise:
-		code, err = planCodeBuild(Code_Vgoods_Plan_Surprise, companyId)
+		code, err = PlanCodeBuild(Code_Vgoods_Plan_Surprise, companyId)
 	default:
 		return "", logiccode.New(100301, "方案类型错误")
 	}
@@ -82,7 +82,7 @@ func GetComplexPlanCode(planType int, companyId int) (string, error) {
 }
 
 // 生成营销方案code码
-func planCodeBuild(planType string, companyId int) (string, error) {
+func PlanCodeBuild(planType string, companyId int) (string, error) {
 	planTypeMatch, _ := regexp.MatchString("^[A-Z]$", planType)
 	if !planTypeMatch {
 		beego.Error("生成方案CODE码时，校验方案类型错误")
