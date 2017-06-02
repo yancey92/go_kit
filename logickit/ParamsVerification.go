@@ -5,6 +5,7 @@ import (
 	"github.com/astaxie/beego"
 	"unicode/utf8"
 	"strconv"
+	"regexp"
 )
 
 const (
@@ -143,6 +144,19 @@ func VerificationLoginName(loginName string) bool {
 func VerificationPhone(phone string) bool {
 	if !(11 <= len(phone) && len(phone) <= 20) || len(phone) != utf8.RuneCountInString(phone) {
 		beego.Error("手机号码格式错误", fmt.Sprintf("手机号码：%v", phone))
+		return false
+	}
+	return true
+}
+
+func VerificationEmail(email string) bool {
+	if len(email) != utf8.RuneCountInString(email) || len(email) < 5 || len(email) > 50 {
+		beego.Error("邮箱格式错误", fmt.Sprintf("邮箱：%v", email))
+		return false
+	}
+	emailMatch, _ := regexp.MatchString("^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+$", email)
+	if !emailMatch {
+		beego.Error("邮箱格式错误", fmt.Sprintf("邮箱：%v", email))
 		return false
 	}
 	return true
