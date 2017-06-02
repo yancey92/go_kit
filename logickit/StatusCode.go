@@ -45,8 +45,7 @@ const (
 	WorkStatusError = 120026 // 工作状态错误
 	SaleStatusError = 120027 // 售卖状态错误
 	DeviceDisable = 120028 // 设备不可用
-	NothingData = 120029 // 无数据
-	
-	SerCompanyCannotOperOherSvm = 130000 // 服务商不能授权添加其他服务商的售货机。
+
+	SerCompanyCannotOperOtherSvm = 130000 // 服务商不能授权添加其他服务商的售货机。
 
 )
