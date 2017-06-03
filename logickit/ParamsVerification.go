@@ -154,7 +154,7 @@ func VerificationEmail(email string) bool {
 		beego.Error("邮箱格式错误", fmt.Sprintf("邮箱：%v", email))
 		return false
 	}
-	emailMatch, _ := regexp.MatchString("^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+$", email)
+	emailMatch, _ := regexp.MatchString("^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+.([a-zA-Z0-9_-])+$", email)
 	if !emailMatch {
 		beego.Error("邮箱格式错误", fmt.Sprintf("邮箱：%v", email))
 		return false
