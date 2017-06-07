@@ -22,6 +22,11 @@ const (
 	Goods_Plan_Single = 12 // 单件购活动
 	Goods_Plan_Many = 13 // 两件购活动
 
+	// 营销方案状态码
+	Plan_Status_Not_Activated = 10 // 未激活
+	Plan_Status_Activated = 11 // 已激活
+	Plan_Status_Has_Put = 12 // 已投放
+	Plan_Status_Stopped = 13 // 已停止
 
 	// 生成营销方案code码时，使用的方案类型code标识
 	Code_Vgoods_Plan_Qrcode = "H" // 虚拟商品扫码方案code类型

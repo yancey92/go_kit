@@ -29,7 +29,7 @@ type RespUpdateSvmConfigVersion struct {
 }
 
 
-// 批量更新售货机版本号
+// 批量更新售货机版本号（只要有一个售货机版本号更新失败，则返回false）
 // return:是否成功，更新版本号失败的售货机id
 func ConfigVersionBatchUpdate(url string, svmIds []int) (bool, []int) {
 	// 批量修改售货机版本号可放置售货机的最大数量
@@ -50,10 +50,11 @@ func ConfigVersionBatchUpdate(url string, svmIds []int) (bool, []int) {
 			svmidsBatch = svmIds[(i - 1) * batchEditSvmIdNum : batchEditSvmIdNum]
 		}
 		svmIdStr := strings.Replace(strings.Replace(strings.Replace(fmt.Sprint(svmidsBatch), " ", ",", batchEditSvmIdNum), "[", "", 1), "]", "", 1)
-		req := httplib.Post(url)
-		req.Param("svm_ids", svmIdStr)
 		resp := RespBatchUpdateSvmConfigVersion{}
-		if err := req.ToJSON(&resp); err != nil {
+		if err := httplib.Post(url).
+			Param("svm_ids", svmIdStr).
+			ToJSON(&resp);
+			err != nil {
 			// 结构体转义失败
 			beego.Error(err, svmidsBatch)
 			isOk = false
@@ -62,6 +63,12 @@ func ConfigVersionBatchUpdate(url string, svmIds []int) (bool, []int) {
 		if resp.Code != http.StatusOK {
 			isOk = false
 			beego.Error(resp)
+			if len(resp.Data.FailSvms) > 0 {
+				failureSvmIds = append(failureSvmIds, resp.Data.FailSvms...)
+			} else {
+				failureSvmIds = append(failureSvmIds, svmidsBatch...)
+			}
+		} else {
 			failureSvmIds = append(failureSvmIds, resp.Data.FailSvms...)
 		}
 	}
@@ -69,19 +76,19 @@ func ConfigVersionBatchUpdate(url string, svmIds []int) (bool, []int) {
 }
 
 //单个更新售货机版本号
-func ConfigVersionUpdate(url string,svmId int) (bool, int) {
+func ConfigVersionUpdate(url string, svmId int) (bool, int) {
 	httpClient := httplib.Post(url)
 	httpClient.Param("svm_id", strconv.Itoa(svmId))
 	httpClient.String()
 	resp := RespUpdateSvmConfigVersion{}
 	if err := httpClient.ToJSON(&resp); err != nil {
 		// 结构体转义失败
-		beego.Error("更新单个售货机版本号返回体解析错误svmid=:", svmId)
-		return  false,svmId
+		beego.Error(fmt.Sprint("更新单个售货机版本号返回体解析错误svmid=%#v", svmId))
+		return false, svmId
 	}
-	if resp.Code != http.StatusOK  || resp.Data.IsSuccess != "Y"{
-		beego.Error("更新单个售货机版本号失败", fmt.Sprintf("%#v",resp))
-		return  false,svmId
+	if resp.Code != http.StatusOK || resp.Data.IsSuccess != "Y" {
+		beego.Error("更新单个售货机版本号失败", fmt.Sprintf("%#v", resp))
+		return false, svmId
 	}
-	return  true,svmId
+	return true, svmId
 }
