@@ -146,6 +146,23 @@ func GetEndDayMsAndDate(date string) (int64, string, error) {
 	return GetTimeMsAndDate(afterDateTime, DateFormat_YYYY_MM_DD_HH_MM_SS)
 }
 
+// @Title 根据YYYY-MM-DD HH:MM:SS格式的时间获取对应的YYYY-MM-DD格式日期
+// @Description 例如:date=2016-11-11 12:00:00 返回 2016-11-11
+// @param timeStr string
+// usage:
+//	GetDateByTime("2016-11-11 12:00:00")
+func GetDateByTime(timeStr string, dateStyle string) (string, error) {
+	t, err := StringToTime(timeStr, dateStyle)
+	if err != nil {
+		return "", err
+	}
+	_, d, err := GetTimeMsAndDate(t, DateFormat_YYYY_MM_DD)
+	if err != nil {
+		return "", err
+	}
+	return d, nil
+}
+
 // @Title 判断checkDate是否在startDate和endDate日期范围之间
 // usage:
 //	DATE_RANGE_BEFORE: checkDate在startDate前面

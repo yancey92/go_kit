@@ -1,9 +1,9 @@
 package timekit
 
 import (
+	"fmt"
 	"testing"
 	"time"
-	"fmt"
 )
 
 func TestTimeDemo(t *testing.T) {
@@ -51,7 +51,7 @@ func TestGetEndDayMs(t *testing.T) {
 }
 
 //获取某天凌晨时间
-func TestGetDayTime(t *testing.T)  {
+func TestGetDayTime(t *testing.T) {
 	tm, err := StringToTime("2016-11-11", DateFormat_YYYY_MM_DD)
 	if err != nil {
 		fmt.Printf("%v", err)
@@ -110,4 +110,13 @@ func TestDefaultCheckDateRange(t *testing.T) {
 		fmt.Printf("%v", err)
 	}
 	fmt.Printf("校验日期=%s 开始日期=%s 结束日期=%s 范围是否合法 %v\n", checkDate, startDate, endDate, result)
+}
+
+func TestGetDateByTime(t *testing.T) {
+	tt := "2016-11-11 11:12:13"
+	result, err := GetDateByTime(tt, DateFormat_YYYY_MM_DD_HH_MM_SS)
+	if err != nil {
+		fmt.Printf("%v", err)
+	}
+	fmt.Printf("格式化后日期 %s\n", result)
 }
