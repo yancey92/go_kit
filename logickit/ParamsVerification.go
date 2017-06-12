@@ -8,13 +8,6 @@ import (
 	"regexp"
 )
 
-const (
-	// 公司类型
-	COMPANY_CATEGORY_PLATFORM = 100 // 平台
-	COMPANY_CATEGORY_SERVICE = 200 // 服务商
-	COMPANY_CATEGORY_OPERATOR = 300 // 运营商
-)
-
 // 校验公司号
 func VerificationCompanyId(companyId int) bool {
 	if !(10000 <= companyId && companyId <= 99999) {
@@ -191,7 +184,10 @@ func VerificationPageSize(size int) bool {
 
 // 校验普通折扣方案类型
 func VerificationDiscountType(discountType int) bool {
-	if !(discountType == Goods_Plan_Svm || discountType == Goods_Plan_Present || discountType == Goods_Plan_Single || discountType == Goods_Plan_Many) {
+	if !(discountType == Goods_Plan_Svm ||
+		discountType == Goods_Plan_Present ||
+		discountType == Goods_Plan_Single ||
+		discountType == Goods_Plan_Many) {
 		beego.Error("方案类型错误", fmt.Sprintf("类型：%v", discountType))
 		return false
 	}
@@ -200,7 +196,10 @@ func VerificationDiscountType(discountType int) bool {
 
 // 校验方案状态
 func VerificationPlanStatus(status int) bool {
-	if !(status == 10 || status == 11 || status == 12 || status == 13) {
+	if !(status == Plan_Status_Not_Activated ||
+		status == Plan_Status_Activated ||
+		status == Plan_Status_Has_Put ||
+		status == Plan_Status_Stopped) {
 		beego.Error("方案状态错误", fmt.Sprintf("方案状态：%v", status))
 		return false
 	}
@@ -210,7 +209,9 @@ func VerificationPlanStatus(status int) bool {
 // 校验虚拟商品方案类型
 func VerificationVgoodsType(vgoodsType int) bool {
 	// '扫码虚拟商品：11，套餐虚拟商品：12，惊喜虚拟商品：13'
-	if !( vgoodsType == Vgoods_Plan_Qrcode || vgoodsType == Vgoods_Plan_Package || vgoodsType == Vgoods_Plan_Surprise) {
+	if !( vgoodsType == Vgoods_Plan_Qrcode ||
+		vgoodsType == Vgoods_Plan_Package ||
+		vgoodsType == Vgoods_Plan_Surprise) {
 		beego.Error("虚拟商品方案类型错误", fmt.Sprintf("虚拟商品方案类型：%v", vgoodsType))
 		return false
 	}
@@ -219,8 +220,8 @@ func VerificationVgoodsType(vgoodsType int) bool {
 
 // 校验url
 func VerificationUrl(url string) bool {
-	if utf8.RuneCountInString(url) > 150 {
-		beego.Error("url长度大于150", fmt.Sprintf("url长度：%v", utf8.RuneCountInString(url)))
+	if utf8.RuneCountInString(url) > 200 {
+		beego.Error("url长度大于200", fmt.Sprintf("url长度：%v", utf8.RuneCountInString(url)))
 		return false
 	}
 	return true
