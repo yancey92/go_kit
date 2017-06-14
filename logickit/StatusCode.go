@@ -27,7 +27,6 @@ const (
 	// 设备
 	SvmAuthError = 100302 // 售货机认证错误
 	ConfigVersionUpdateError = 120007 // 数据已更新，版本更新失败。
-	DeviceNotExist = 120020 // 设备不存在
 	DeviceCodeNotRelationMainBoardCode = 120021 // 设备编码和工控编码不一致
 	NotConfigGoods = 120022 // 设备上该商品未配置
 	WorkStatusError = 120026 // 工作状态错误
