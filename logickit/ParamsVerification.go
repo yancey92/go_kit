@@ -218,6 +218,16 @@ func VerificationVgoodsType(vgoodsType int) bool {
 	return true
 }
 
+func VerificationGoodsStatus(status int) bool {
+	// 10：上架，11：下架
+	if !( status == 10 ||
+		status == 11 ) {
+		beego.Error("商品状态错误", fmt.Sprintf("商品状态：%v", status))
+		return false
+	}
+	return true
+}
+
 // 校验url
 func VerificationUrl(url string) bool {
 	if utf8.RuneCountInString(url) > 200 {
