@@ -1,13 +1,13 @@
 package dbkit
 
 import (
+	"crypto/tls"
 	"fmt"
 	"git.gumpcome.com/go_kit/logiccode"
 	"git.gumpcome.com/go_kit/strkit"
 	"github.com/astaxie/beego"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"crypto/tls"
 	"net"
 )
 
@@ -57,7 +57,7 @@ func InitMongoDB(connUrl string, dbName string) {
 // SSL协议初始化数据库
 // @connUrl 连接字符串
 // @dbName  数据库名称
-func InitMongoDBWithSSL(connUrl string, dbName string)  {
+func InitMongoDBWithSSL(connUrl string, dbName string) {
 	if connUrl == "" || dbName == "" {
 		panic("conn url or db name is empty!")
 	}
@@ -107,9 +107,24 @@ func MongoUpsertDoc(search *MongoSearch, doc interface{}) (bool, error) {
 	}
 	_, err = session.DB(mongoDBName).C(search.collection).Upsert(bson.M{search.key: search.value}, doc)
 	if err != nil {
-		return  false, logiccode.MongoUpsertErrorCode(err)
+		return false, logiccode.MongoUpsertErrorCode(err)
 	}
-	return true,nil
+	return true, nil
+}
+
+//插入记录
+func MongoInsert(colelection string, data interface{}) error {
+	session, err := getSession()
+	if err != nil {
+		return err
+	}
+	defer session.Clone()
+	c := session.DB(mongoDBName).C(colelection)
+	err = c.Insert(data)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // 查找单个记录
@@ -136,9 +151,9 @@ func MongoRemoveAllDoc(search *MongoSearch) (bool, error) {
 	}
 	_, err = session.DB(mongoDBName).C(search.collection).RemoveAll(bson.M{search.key: search.value})
 	if err != nil {
-		return  false, logiccode.MongoRemoveErrorCode(err)
+		return false, logiccode.MongoRemoveErrorCode(err)
 	}
-	return true,nil
+	return true, nil
 }
 
 // 设置连接字符串后缀可选项
