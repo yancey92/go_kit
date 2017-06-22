@@ -17,6 +17,14 @@ func VerificationCompanyId(companyId int) bool {
 	return true
 }
 
+func VerificationCompanyPId(companyPId int) bool {
+	if !(10000 <= companyPId && companyPId <= 99999 || companyPId == 0) {
+		beego.Error("父公司号错误", fmt.Sprintf("公司号：%v", companyPId))
+		return false
+	}
+	return true
+}
+
 // 校验【查询服务商运营商关系】查询方式
 func VerificationOwnerQueryType(queryType int) bool {
 	if !(queryType == 0 || queryType == 10 || queryType == 11) {
@@ -27,11 +35,10 @@ func VerificationOwnerQueryType(queryType int) bool {
 }
 
 // 校验公司类型
-func VerificationCompCategory(companyCategory int) bool {
-	if !(companyCategory == COMPANY_CATEGORY_PLATFORM ||
-		companyCategory == COMPANY_CATEGORY_SERVICE ||
-		companyCategory == COMPANY_CATEGORY_OPERATOR) {
-		beego.Error("公司类型错误", fmt.Sprintf("公司类型=%v", companyCategory))
+func VerificationCompanyType(companyType int) bool {
+	if !(companyType == 10 ||
+		companyType == 11) {
+		beego.Error("公司类型错误", fmt.Sprintf("公司类型=%v", companyType))
 		return false
 	}
 	return true
@@ -85,18 +92,6 @@ func VerificationSvmLonOrLat(lonOrLat string) bool {
 	return true
 }
 
-// 校验公司权限类型
-func VerificationCompAccessCategory(companyCategory int) bool {
-	if !(companyCategory == 0 ||
-		companyCategory == COMPANY_CATEGORY_PLATFORM ||
-		companyCategory == COMPANY_CATEGORY_SERVICE ||
-		companyCategory == COMPANY_CATEGORY_OPERATOR) {
-		beego.Error("公司权限类型错误", fmt.Sprintf("公司权限类型=%v", companyCategory))
-		return false
-	}
-	return true
-}
-
 // 校验权限ID
 func VerificationAccessId(accessId int) bool {
 	if accessId < 100000 || accessId > 999999 {
@@ -128,6 +123,15 @@ func VerificationLoginPwd(pwd string) bool {
 func VerificationLoginName(loginName string) bool {
 	if len(loginName) != utf8.RuneCountInString(loginName) || len(loginName) < 6 || len(loginName) > 30 {
 		beego.Error("账号格式错误", fmt.Sprintf("账号：%v", loginName))
+		return false
+	}
+	return true
+}
+
+// 校验账号类型
+func VerificationAccountType(accountType int) bool {
+	if !(accountType == 10 || accountType == 11 || accountType == 12) {
+		beego.Error("账号类型错误", fmt.Sprintf("账号类型：%v", accountType))
 		return false
 	}
 	return true

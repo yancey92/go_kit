@@ -4,6 +4,7 @@ package logiccode
 import (
 	"strconv"
 	"git.gumpcome.com/go_kit/strkit"
+	"github.com/astaxie/beego"
 )
 
 func New(code int, msg string) error {
@@ -24,6 +25,18 @@ type LogicCode struct {
 
 func (code *LogicCode) Error() string {
 	return strkit.StrJoin("[", strconv.Itoa(code.Code), "]<", code.Msg, ">")
+}
+
+// 获取error的状态码
+func GetCode(err error) int {
+	switch value := err.(type) {
+	case *LogicCode:
+		return value.Code
+	default:
+		beego.Info(value)
+		return 0
+	}
+	return 0
 }
 
 // @Title DB连接错误
@@ -134,7 +147,7 @@ func RedisClientErrorCode() error {
 }
 
 // @Title Redis 参数错误
-func RedisParamsErrorCode() error  {
+func RedisParamsErrorCode() error {
 	return New(100020, "redis params is empty")
 }
 
