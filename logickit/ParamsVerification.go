@@ -17,6 +17,7 @@ func VerificationCompanyId(companyId int) bool {
 	return true
 }
 
+// 校验公司号（父id）
 func VerificationCompanyPId(companyPId int) bool {
 	if !(10000 <= companyPId && companyPId <= 99999 || companyPId == 0) {
 		beego.Error("父公司号错误", fmt.Sprintf("公司号：%v", companyPId))
@@ -112,7 +113,7 @@ func VerificationAccessPId(accessPId int) bool {
 
 // 校验登录密码
 func VerificationLoginPwd(pwd string) bool {
-	if len(pwd) != utf8.RuneCountInString(pwd) || len(pwd) < 8 {
+	if len(pwd) != utf8.RuneCountInString(pwd) || len(pwd) < 6 || len(pwd) > 20 {
 		beego.Error("密码格式错误", fmt.Sprintf("密码：%v", pwd))
 		return false
 	}
