@@ -26,12 +26,12 @@ var (
 )
 
 type MongoSearch struct {
-	collection string
-	key        string
-	value      string
+	Collection string
+	Key        string
+	Value      string
 }
 
-// 非SSL协议初始化数据库
+// 非SSL协议初始K化数据库
 // @connUrl 连接字符串
 // @dbName  数据库名称
 func InitMongoDB(connUrl string, dbName string) {
@@ -102,10 +102,10 @@ func MongoUpsertDoc(search *MongoSearch, doc interface{}) (bool, error) {
 		return false, err
 	}
 	defer session.Clone()
-	if search == nil || doc == nil || search.collection == "" || search.key == "" || search.value == "" {
+	if search == nil || doc == nil || search.Collection == "" || search.Key == "" || search.Value == "" {
 		return false, logiccode.MongoParamsErrorCode()
 	}
-	_, err = session.DB(mongoDBName).C(search.collection).Upsert(bson.M{search.key: search.value}, doc)
+	_, err = session.DB(mongoDBName).C(search.Collection).Upsert(bson.M{search.Key: search.Value}, doc)
 	if err != nil {
 		return false, logiccode.MongoUpsertErrorCode(err)
 	}
@@ -146,10 +146,10 @@ func MongoRemoveAllDoc(search *MongoSearch) (bool, error) {
 		return false, err
 	}
 	defer session.Clone()
-	if search == nil || search.collection == "" || search.key == "" || search.value == "" {
+	if search == nil || search.Collection == "" || search.Key == "" || search.Value == "" {
 		return false, logiccode.MongoParamsErrorCode()
 	}
-	_, err = session.DB(mongoDBName).C(search.collection).RemoveAll(bson.M{search.key: search.value})
+	_, err = session.DB(mongoDBName).C(search.Collection).RemoveAll(bson.M{search.Key: search.Value})
 	if err != nil {
 		return false, logiccode.MongoRemoveErrorCode(err)
 	}
