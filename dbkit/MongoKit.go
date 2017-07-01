@@ -28,7 +28,7 @@ var (
 type MongoSearch struct {
 	Collection string
 	Key        string
-	Value      string
+	Value      interface{}
 }
 
 // 非SSL协议初始K化数据库
@@ -96,20 +96,20 @@ func InitMongoDBWithSSL(connUrl string, dbName string) {
 
 // 查询出与search匹配的结果,如果没有就添加,否则会覆盖原有记录
 // 注意:如果Mongo搜索到多条与search匹配的记录,只会更新最新插入的一条记录。
-func MongoUpsertDoc(search *MongoSearch, doc interface{}) (bool, error) {
+func MongoUpsertDoc(search *MongoSearch, doc interface{}) (*mgo.ChangeInfo, bool, error) {
 	session, err := getSession()
 	if err != nil {
-		return false, err
+		return &mgo.ChangeInfo{}, false, err
 	}
 	defer session.Clone()
-	if search == nil || doc == nil || search.Collection == "" || search.Key == "" || search.Value == "" {
-		return false, logiccode.MongoParamsErrorCode()
+	if search == nil || doc == nil || search.Collection == "" || search.Key == "" || search.Value == nil {
+		return &mgo.ChangeInfo{}, false, logiccode.MongoParamsErrorCode()
 	}
-	_, err = session.DB(mongoDBName).C(search.Collection).Upsert(bson.M{search.Key: search.Value}, doc)
+	changeInfo, err := session.DB(mongoDBName).C(search.Collection).Upsert(bson.M{search.Key: search.Value}, doc)
 	if err != nil {
-		return false, logiccode.MongoUpsertErrorCode(err)
+		return &mgo.ChangeInfo{}, false, logiccode.MongoUpsertErrorCode(err)
 	}
-	return true, nil
+	return changeInfo, true, nil
 }
 
 //插入记录
@@ -154,6 +154,15 @@ func MongoRemoveAllDoc(search *MongoSearch) (bool, error) {
 		return false, logiccode.MongoRemoveErrorCode(err)
 	}
 	return true, nil
+}
+
+func Find(search *MongoSearch) (*mgo.Query, error) {
+	session, err := getSession()
+	if err != nil {
+		return nil, err
+	}
+	data := session.DB(mongoDBName).C(search.Collection).Find(bson.M{search.Key: search.Value})
+	return data, nil
 }
 
 // 设置连接字符串后缀可选项
