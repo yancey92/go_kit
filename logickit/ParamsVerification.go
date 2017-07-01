@@ -6,6 +6,8 @@ import (
 	"unicode/utf8"
 	"strconv"
 	"regexp"
+	"git.gumpcome.com/go_kit/strkit"
+	"strings"
 )
 
 // 校验公司号
@@ -52,6 +54,35 @@ func VerificationPayWay(payWay int) bool {
 		return false
 	}
 	return true
+}
+
+// 校验支付方式
+func VerificationPayWayStrs(payWayStr string) (bool, []int) {
+	if strkit.StrIsBlank(payWayStr) {
+		beego.Error("支付方式错误", fmt.Sprintf("支付方式=%v", payWayStr))
+		return false, nil
+	}
+	payWays := strings.Split(payWayStr, ",")
+	payWayList := make([]int, 0, len(payWays))
+	payWaysMap := make(map[int]int)
+	for _, v := range payWays {
+		if payWay, err := strconv.Atoi(v); err != nil {
+			beego.Error(err)
+			beego.Error("支付方式错误", fmt.Sprintf("支付方式=%v", payWayStr))
+			return false, nil
+		} else if VerificationPayWay(payWay) {
+			payWaysMap[payWay] = payWay
+			payWayList = append(payWayList, payWay)
+		} else {
+			beego.Error("支付方式错误", fmt.Sprintf("支付方式=%v", payWay))
+			return false, nil
+		}
+	}
+	if len(payWaysMap) != len(payWays) {
+		beego.Error("存在重复的支付方式")
+		return false, nil
+	}
+	return true, payWayList
 }
 
 // 校验售货机ID
