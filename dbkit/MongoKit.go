@@ -101,7 +101,7 @@ func MongoUpsertDoc(search *MongoSearch, doc interface{}) (*mgo.ChangeInfo, bool
 	if err != nil {
 		return &mgo.ChangeInfo{}, false, err
 	}
-	defer session.Clone()
+	defer session.Close()
 	if search == nil || doc == nil || search.Collection == "" || search.Key == "" || search.Value == nil {
 		return &mgo.ChangeInfo{}, false, logiccode.MongoParamsErrorCode()
 	}
@@ -118,7 +118,7 @@ func MongoInsert(colelection string, data interface{}) error {
 	if err != nil {
 		return err
 	}
-	defer session.Clone()
+	defer session.Close()
 	c := session.DB(mongoDBName).C(colelection)
 	err = c.Insert(data)
 	if err != nil {
@@ -127,13 +127,13 @@ func MongoInsert(colelection string, data interface{}) error {
 	return nil
 }
 
-// 查找单个记录
-func MongoFindDoc(collection string, fun func(*mgo.Collection)) error {
+//查找记录处理器
+func MongoFindHandler(collection string, fun func(*mgo.Collection)) error {
 	session, err := getSession()
 	if err != nil {
 		return err
 	}
-	defer session.Clone()
+	defer session.Close()
 	c := session.DB(mongoDBName).C(collection)
 	fun(c)
 	return nil
@@ -145,7 +145,7 @@ func MongoRemoveAllDoc(search *MongoSearch) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	defer session.Clone()
+	defer session.Close()
 	if search == nil || search.Collection == "" || search.Key == "" || search.Value == "" {
 		return false, logiccode.MongoParamsErrorCode()
 	}
@@ -156,11 +156,13 @@ func MongoRemoveAllDoc(search *MongoSearch) (bool, error) {
 	return true, nil
 }
 
-func Find(search *MongoSearch) (*mgo.Query, error) {
+//查找记录
+func MongoFindDoc(search *MongoSearch) (*mgo.Query, error) {
 	session, err := getSession()
 	if err != nil {
 		return nil, err
 	}
+	defer session.Close()
 	data := session.DB(mongoDBName).C(search.Collection).Find(bson.M{search.Key: search.Value})
 	return data, nil
 }
@@ -175,6 +177,11 @@ func setConnUrlOptions(connUlr string) string {
 	//opts = append(opts, "&connectTimeoutMS=10000") //10s连接超时
 	//opts = append(opts, "&socketTimeoutMS=10000")  //10s操作超时
 	return strkit.StrJoin(opts...)
+}
+
+// 获取Mongo连接
+func GetMongoSession() (*mgo.Session, error) {
+	return getSession()
 }
 
 func getSession() (*mgo.Session, error) {
@@ -202,72 +209,3 @@ func getSession() (*mgo.Session, error) {
 	}
 	return nil, logiccode.MongoSessionCloneErrorCode()
 }
-
-//
-//func InitMongoDBWithUrl(url string) {
-//	if inited {
-//		return
-//	}
-//}
-//
-//func InitMongoDBWithUrlSSL(url string) {
-//	if inited {
-//		return
-//	}
-//}
-//
-//func (this *MongoDB) New(user, password, host, admin, dbname string) *MongoDB {
-//	if user == "" || password == "" || host == "" || admin == "" || dbname == "" {
-//		panic("please complete params")
-//	}
-//	if this.PoolLimit <= 0 {
-//		this.PoolLimit = DEFAUL_POOL_LIMIT
-//	}
-//	if this.init {
-//		return this
-//	}
-//	this.init = true
-//	this.User = user
-//	this.Password = password
-//	this.Host = host
-//	this.Admin = admin
-//	this.Db = dbname
-//
-//	if this.MaxReties <= 0 {
-//		this.MaxReties = MAX_RETRIES
-//	}
-//	session, err := mgo.Dial(fmt.Sprintf(MONGO_CR, this.User, this.Password, this.Host, this.Admin))
-//	if err != nil {
-//		panic(err)
-//	}
-//	session.SetPoolLimit(this.PoolLimit)
-//	err = session.Ping()
-//	if err != nil {
-//		panic(err)
-//	}
-//	session.SetMode(mgo.Monotonic, true)
-//
-//	this.db = session.DB(this.Db)
-//	return this
-//}
-//
-//func (this *MongoDB) GetMongo() *mgo.Database {
-//	if this.init == false {
-//		panic("please call New before")
-//	}
-//	err := this.db.Session.Ping()
-//	if err != nil {
-//		beego.Debug("%v", "Lost connection to db!")
-//		this.db.Session.Refresh()
-//		for i := 0; i < MAX_RETRIES; i++ {
-//			err = this.db.Session.Ping()
-//			if err == nil {
-//				beego.Debug("%v", "Reconnect to db successful.")
-//				break
-//			} else {
-//				beego.Error("Reconnect to db faild:%v", i)
-//			}
-//		}
-//	}
-//	return this.db
-//}

@@ -17,10 +17,10 @@ type Person struct {
 func TestMongoUpsertDoc(t *testing.T) {
 	//InitMongoDB("mongodb://localhost:27017", "gumpcome")
 	InitMongoDBWithSSL(sslUrl, "gumpcome")
-	isOk, err := MongoUpsertDoc(&MongoSearch{
-		collection: "people",
-		key:        "phone",
-		value:      "123456789",
+	_, isOk, err := MongoUpsertDoc(&MongoSearch{
+		Collection: "people",
+		Key:        "phone",
+		Value:      "123456789",
 	}, &Person{"guanyu", "123456789"})
 	if err != nil {
 		fmt.Println(err)
@@ -42,9 +42,9 @@ func TestMongoFindDoc(t *testing.T) {
 func TestMongoRemoveAllDoc(t *testing.T) {
 	InitMongoDB("mongodb://localhost:27017", "gumpcome")
 	isOk, err := MongoRemoveAllDoc(&MongoSearch{
-		collection: "people",
-		key:        "phone",
-		value:      "123456789",
+		Collection: "people",
+		Key:        "phone",
+		Value:      "123456789",
 	})
 	if err != nil {
 		fmt.Println(err)

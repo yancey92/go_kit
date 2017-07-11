@@ -120,3 +120,13 @@ func TestGetDateByTime(t *testing.T) {
 	}
 	fmt.Printf("格式化后日期 %s\n", result)
 }
+
+func TestMs2Date(t *testing.T) {
+	ms := 0
+	sec := int64(ms / 1000)
+	result, err := TimeToString(time.Unix(sec, 0), DateFormat_YYYY_MM_DD_HH_MM_SS)
+	if err != nil {
+		fmt.Printf("%v", err)
+	}
+	fmt.Printf("格式化后日期 %s\n", result)
+}
