@@ -95,6 +95,67 @@ func RedisGet(key string) (string, error) {
 	}
 }
 
+// 向数据库中添加键值对内容
+// @key 	主键
+// @value 	内容 以键值对（map）存储
+func RedisSetMap(key string, fields map[string]interface{}) error {
+	if key == "" || len(fields) == 0 {
+		return logiccode.RedisParamsErrorCode()
+	}
+	client := getRedisClient()
+	if client == nil {
+		return logiccode.RedisClientErrorCode()
+	}
+	err := client.HMSet(key, fields).Err()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+
+// 从数据库获取对应键内容
+// @key 	主键
+func RedisGetMap(key string) (map[string]string, error) {
+	result := make(map[string]string)
+	if key == "" {
+		return result, logiccode.RedisParamsErrorCode()
+	}
+	client := getRedisClient()
+	if client == nil {
+		return result, logiccode.RedisClientErrorCode()
+	}
+	result, err := client.HGetAll(key).Result()
+
+	if err == redis.Nil {
+		return result, logiccode.RedisKeyErrorCode()
+	} else if err != nil {
+		return result, err
+	} else {
+		return result, nil
+	}
+}
+// 从数据库获取对应键内容
+// @key 	主键
+func RedisGetMapVal(key string,value ...string) ([]interface{}, error) {
+	result := make([]interface{},0)
+	if key == "" {
+		return result, logiccode.RedisParamsErrorCode()
+	}
+	client := getRedisClient()
+	if client == nil {
+		return result, logiccode.RedisClientErrorCode()
+	}
+	result, err := client.HMGet(key,value...).Result()
+
+	if err == redis.Nil {
+		return result, logiccode.RedisKeyErrorCode()
+	} else if err != nil {
+		return result, err
+	} else {
+		return result, nil
+	}
+}
 // 判断数据库是否存在该键
 // @key 	主键
 func RedisExists(key string) (bool, error) {
