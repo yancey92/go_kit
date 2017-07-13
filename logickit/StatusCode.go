@@ -58,11 +58,6 @@ const (
 )
 
 const (
-	// 公司类型
-	COMPANY_CATEGORY_PLATFORM = 100 // 平台
-	COMPANY_CATEGORY_SERVICE = 200 // 服务商
-	COMPANY_CATEGORY_OPERATOR = 300 // 运营商
-
 	// 虚拟商品营销方案类型标识 (同时对应虚拟商品类型)
 	Vgoods_Plan_Qrcode = 11 // 扫码
 	Vgoods_Plan_Package = 12  // 套餐
