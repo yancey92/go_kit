@@ -22,7 +22,6 @@ const (
 	AccountNotBelongsGroup = 120019 // 账户与群组无管理关系。
 	NotIsDispatcher = 120011 // 非总调度员角色。
 	AccountDisable = 120012 // 账户不可用。
-	SerCompanyCannotOperOtherSvm = 130000 // 服务商不能授权添加其他服务商的售货机。
 
 	// 设备
 	SvmAuthError = 100302 // 售货机认证错误
