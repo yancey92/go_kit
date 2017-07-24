@@ -16,13 +16,13 @@ func GetCommonDiscountPlanCode(planType int, companyId int) (string, error) {
 	var err error
 	switch planType {
 	case Goods_Plan_Svm:
-		code, err = PlanCodeBuild(Code_Goods_Plan_Svm, companyId)
+		code, err = planCodeBuild(Code_Goods_Plan_Svm, companyId)
 	case Goods_Plan_Present:
-		code, err = PlanCodeBuild(Code_Goods_Plan_Present, companyId)
+		code, err = planCodeBuild(Code_Goods_Plan_Present, companyId)
 	case Goods_Plan_Single:
-		code, err = PlanCodeBuild(Code_Goods_Plan_Single, companyId)
+		code, err = planCodeBuild(Code_Goods_Plan_Single, companyId)
 	case Goods_Plan_Many:
-		code, err = PlanCodeBuild(Code_Goods_Plan_Many, companyId)
+		code, err = planCodeBuild(Code_Goods_Plan_Many, companyId)
 	default:
 		beego.Error("方案类型错误", planType)
 		return "", logiccode.New(ParamValueError, "方案类型错误", )
@@ -39,11 +39,11 @@ func GetComplexPlanCode(planType int, companyId int) (string, error) {
 	var err error
 	switch planType {
 	case Vgoods_Plan_Qrcode:
-		code, err = PlanCodeBuild(Code_Vgoods_Plan_Qrcode, companyId)
+		code, err = planCodeBuild(Code_Vgoods_Plan_Qrcode, companyId)
 	case Vgoods_Plan_Package:
-		code, err = PlanCodeBuild(Code_Vgoods_Plan_Package, companyId)
+		code, err = planCodeBuild(Code_Vgoods_Plan_Package, companyId)
 	case Vgoods_Plan_Surprise:
-		code, err = PlanCodeBuild(Code_Vgoods_Plan_Surprise, companyId)
+		code, err = planCodeBuild(Code_Vgoods_Plan_Surprise, companyId)
 	default:
 		beego.Error("方案类型错误", planType)
 		return "", logiccode.New(ParamValueError, "方案类型错误")
@@ -58,17 +58,18 @@ func GetComplexPlanCode(planType int, companyId int) (string, error) {
 func GetAdPlanCode(companyId int) (string, error) {
 	var code string
 	var err error
-	code, err = PlanCodeBuild(Code_Plan_Ads, companyId)
+	code, err = planCodeBuild(Code_Plan_Ads, companyId)
 	if err != nil {
 		beego.Error(err)
 	}
 	return code, err
 }
+
 // 首页商品营销方案code码生成
 func GetHomeGoodsPlanCode(companyId int) (string, error) {
 	var code string
 	var err error
-	code, err = PlanCodeBuild(Code_Goods_Plan_Home, companyId)
+	code, err = planCodeBuild(Code_Goods_Plan_Home, companyId)
 	if err != nil {
 		beego.Error(err)
 	}
@@ -79,7 +80,7 @@ func GetHomeGoodsPlanCode(companyId int) (string, error) {
 func GetPayTagPlanCode(companyId int) (string, error) {
 	var code string
 	var err error
-	code, err = PlanCodeBuild(Code_Plan_PayTag, companyId)
+	code, err = planCodeBuild(Code_Plan_PayTag, companyId)
 	if err != nil {
 		beego.Error(err)
 	}
@@ -87,7 +88,7 @@ func GetPayTagPlanCode(companyId int) (string, error) {
 }
 
 // 生成营销方案code码
-func PlanCodeBuild(planType string, companyId int) (string, error) {
+func planCodeBuild(planType string, companyId int) (string, error) {
 	planTypeMatch, _ := regexp.MatchString("^[A-Z]$", planType)
 	if !planTypeMatch {
 		beego.Error("生成方案CODE码时，校验方案类型错误")
