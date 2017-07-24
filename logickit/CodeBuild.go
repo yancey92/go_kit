@@ -54,7 +54,7 @@ func GetComplexPlanCode(planType int, companyId int) (string, error) {
 	return code, err
 }
 
-// 广告方案code码生成（视频和图片广告）支付标签营销方案）
+// 广告方案code码生成（视频和图片广告）
 func GetAdPlanCode(companyId int) (string, error) {
 	var code string
 	var err error
@@ -75,7 +75,7 @@ func GetHomeGoodsPlanCode(companyId int) (string, error) {
 	return code, err
 }
 
-// 首页商品营销方案code码生成
+// 支付标签方案code码生成
 func GetPayTagPlanCode(companyId int) (string, error) {
 	var code string
 	var err error
