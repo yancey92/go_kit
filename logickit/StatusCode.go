@@ -86,6 +86,6 @@ const (
 
 	Code_Goods_Plan_Home = "E" // 首页商品营销方案
 	Code_Plan_Ads = "F" // 广告营销方案
-	Code_Plan_PayTag = "G" // 广告营销方案
+	Code_Plan_PayTag = "G" // 支付标签营销方案
 
 )
