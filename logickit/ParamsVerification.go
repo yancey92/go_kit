@@ -230,7 +230,7 @@ func VerificationDiscountType(discountType int) bool {
 	return true
 }
 
-// 校验方案状态
+// 校验方案状态(实物商品常规折扣营销方案，虚拟商品常规折扣营销方案)
 func VerificationPlanStatus(status int) bool {
 	if !(status == Plan_Status_Not_Activated ||
 		status == Plan_Status_Activated ||
