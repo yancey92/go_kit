@@ -5,8 +5,8 @@ package timekit
 import (
 	"errors"
 	"fmt"
-	"time"
 	"git.gumpcome.com/go_kit/logiccode"
+	"time"
 )
 
 const (
@@ -16,6 +16,7 @@ const (
 	DateFormat_YYYYMMDDHHMMSSMS       string = "20060102150405000"
 	DateFormat_YYYYMMDDHHMMSS         string = "20060102150405"
 	DateFormat_YYYYMMDD               string = "20060102"
+	DateFormat_YYYYMM                 string = "200601"
 	DATE_RANGE_BEFORE                 string = "before"
 	DATE_RANGE_MIDDLE                 string = "middle"
 	DATE_RANGE_AFTER                  string = "after"
@@ -36,7 +37,8 @@ func TimeToString(time time.Time, dateStyle string) (string, error) {
 	case DateFormat_YYYY_MM_DD_HH_MM_SS,
 		DateFormat_YYYY_MM_DD,
 		DateFormat_YYYYMMDDHHMMSS,
-		DateFormat_YYYYMMDD:
+		DateFormat_YYYYMMDD,
+		DateFormat_YYYYMM:
 		return time.Format(dateStyle), nil
 	case DateFormat_YYYY_MM_DD_HH_MM_SS_MS:
 		return fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d %03d", time.Year(), time.Month(), time.Day(), time.Hour(), time.Minute(), time.Second(), time.Nanosecond()/1000000), nil
@@ -109,7 +111,8 @@ func StringToTime(date string, dateStyle string) (time.Time, error) {
 	case DateFormat_YYYY_MM_DD_HH_MM_SS,
 		DateFormat_YYYY_MM_DD,
 		DateFormat_YYYYMMDDHHMMSS,
-		DateFormat_YYYYMMDD:
+		DateFormat_YYYYMMDD,
+		DateFormat_YYYYMM:
 		return time.ParseInLocation(dateStyle, date, time.Local)
 	default:
 		return time.Time{}, errors.New("dateStyle is error")

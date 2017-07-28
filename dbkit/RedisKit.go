@@ -2,11 +2,11 @@ package dbkit
 
 import (
 	"fmt"
+	"git.gumpcome.com/go_kit/logiccode"
 	"github.com/go-redis/redis"
 	"strconv"
 	"strings"
 	"time"
-	"git.gumpcome.com/go_kit/logiccode"
 )
 
 var (
@@ -71,6 +71,35 @@ func RedisSetWithExpire(key string, value string, sec time.Duration) error {
 	err := client.Set(key, value, sec).Err()
 	if err != nil {
 		return err
+	}
+	return nil
+}
+
+// 向数据库中添加键值对内容,值是一组KV集合,无过期时间
+// @key 	主键
+// @fields 	内容
+func RedisHSetWith(key string, fields map[string]interface{}) error {
+	return RedisHSetWithExpire(key, fields, 0)
+}
+
+// 向数据库中添加键值对内容,,值是一组KV集合,带过期时间
+// @key 	主键
+// @fields 	内容
+// @sec		过期时间,单位秒,0:永不过期
+func RedisHSetWithExpire(key string, fields map[string]interface{}, sec time.Duration) error {
+	if key == "" || fields == nil || len(fields) == 0 {
+		return logiccode.RedisParamsErrorCode()
+	}
+	client := getRedisClient()
+	if client == nil {
+		return logiccode.RedisClientErrorCode()
+	}
+	err := client.HMSet(key, fields).Err()
+	if err != nil {
+		return err
+	}
+	if sec > 0 { //设置KEY过期时间
+		client.Expire(key, sec)
 	}
 	return nil
 }
