@@ -254,6 +254,17 @@ func VerificationVgoodsType(vgoodsType int) bool {
 	return true
 }
 
+// 校验虚拟商品方案类型
+func VerificationAdType(adType int) bool {
+	// 10：图片广告 11：视频广告
+	if !( adType == 10 ||
+		adType == 11 ) {
+		beego.Error("广告类型错误", fmt.Sprintf("广告类型：%v", adType))
+		return false
+	}
+	return true
+}
+
 func VerificationGoodsStatus(status int) bool {
 	// 10：上架，11：下架
 	if !( status == 10 ||
