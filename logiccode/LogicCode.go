@@ -29,6 +29,9 @@ func (code *LogicCode) Error() string {
 
 // 获取error的状态码
 func GetCode(err error) int {
+	if err == nil {
+		return 0
+	}
 	switch value := err.(type) {
 	case *LogicCode:
 		return value.Code
