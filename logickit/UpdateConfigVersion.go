@@ -77,13 +77,12 @@ func ConfigVersionBatchUpdate(url string, svmIds []int) (bool, []int) {
 
 //单个更新售货机版本号
 func ConfigVersionUpdate(url string, svmId int) (bool, int) {
-	httpClient := httplib.Post(url)
-	httpClient.Param("svm_id", strconv.Itoa(svmId))
-	httpClient.String()
+	httpClient := httplib.Post(url).
+		Param("svm_id", strconv.Itoa(svmId))
 	resp := RespUpdateSvmConfigVersion{}
 	if err := httpClient.ToJSON(&resp); err != nil {
 		// 结构体转义失败
-		beego.Error(fmt.Sprint("更新单个售货机版本号返回体解析错误svmid=%#v", svmId))
+		beego.Error(fmt.Sprintf("更新单个售货机版本号返回体解析错误svmid=%#v", svmId), err)
 		return false, svmId
 	}
 	if resp.Code != http.StatusOK || resp.Data.IsSuccess != "Y" {
