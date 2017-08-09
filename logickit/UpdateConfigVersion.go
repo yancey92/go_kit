@@ -51,6 +51,7 @@ func ConfigVersionBatchUpdate(url string, svmIds []int) (bool, []int) {
 		}
 		svmIdStr := strings.Replace(strings.Replace(strings.Replace(fmt.Sprint(svmidsBatch), " ", ",", batchEditSvmIdNum), "[", "", 1), "]", "", 1)
 		resp := RespBatchUpdateSvmConfigVersion{}
+		beego.Info("批量修改售货机版本号URl：",url)
 		if err := httplib.Post(url).
 			Param("svm_ids", svmIdStr).
 			ToJSON(&resp);

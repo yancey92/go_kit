@@ -125,3 +125,35 @@ func TestAutoRetryConn(t *testing.T)  {
 	}
 	fmt.Printf("判断结果 %v\n", result)
 }
+
+func TestRedisSetMapWithExpire(t *testing.T) {
+	InitRedis("127.0.0.1:6379", "", 0)
+	testMap := make(map[string]interface{},0)
+	testMap["name"] = "张三"
+	testMap["age"] = "20"
+	err := RedisSetMap("key0", testMap)
+	if err != nil {
+		t.Logf("插入失败 %v\n", err)
+		t.Fail()
+	}
+
+	stats, _ := RedisGetPoolStats()
+	//查看连接池状态
+	t.Logf("连接池状态 %#v\n", stats)
+
+	result, err := RedisGetMap("key0")
+	if err != nil {
+		t.Logf("读取失败%v\n", err)
+		t.Fail()
+	} else {
+		t.Logf("读取成功result %s\n", result)
+	}
+
+	resultVal, err := RedisGetMapVal("key0","name","age")
+	if err != nil {
+		t.Logf("读取失败%v\n", err)
+		t.Fail()
+	} else {
+		t.Logf("读取成功resultVal %s\n", resultVal)
+	}
+}
