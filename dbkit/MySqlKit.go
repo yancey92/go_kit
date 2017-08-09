@@ -451,9 +451,14 @@ func FindFirstInMysql(myDbCon *sql.DB, querySql string, intItems []string, data 
 			}
 
 			if _, ok := intItemsMap[columns[i]]; ok {
-				record[columns[i]], err = strkit.StrToInt(itemVal)
-				if err != nil {
-					return nil, logiccode.DbItemToIntErrorCode()
+				if strings.TrimSpace(itemVal) != "" {
+					record[columns[i]], err = strkit.StrToInt(itemVal)
+					if err != nil {
+						beego.Error(fmt.Sprintf("item to int error :%#v", columns[i]))
+						return nil, logiccode.DbItemToIntErrorCode()
+					}
+				} else {
+					record[columns[i]] = 0
 				}
 			} else {
 				record[columns[i]] = itemVal
