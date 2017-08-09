@@ -91,3 +91,14 @@ const (
 
 
 )
+
+const (
+	// 工作状态 10：线上运营，11：停机保养，12：待机调试',
+	SVM_WORKSTATUS_RUN = 10
+	SVM_WORKSTATUS_STOP = 11
+	SVM_WORKSTATUS_DEBUG = 12
+
+	// 销售状态，10：正常销售，11：禁止销售
+	SVM_SALESTATUS_ENABLE = 10
+	SVM_SALESTATUS_DISABLE = 11
+)

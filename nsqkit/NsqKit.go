@@ -24,8 +24,9 @@ type nsqProducer struct {
 }
 
 type NsqConfig struct {
-	MsgTimeout  time.Duration //消息推送到消费者超时时间
-	DialTimeout time.Duration //连接nsqd超时时间
+	MsgTimeout   time.Duration //消息推送到消费者超时时间
+	DialTimeout  time.Duration //连接nsqd超时时间
+	WriteTimeout time.Duration //往nsqd中写消息超时时间
 }
 
 type NsqClient struct {
@@ -48,7 +49,7 @@ func (this *NsqClient) Init(nsqLookupAddr string, nsqConfig *NsqConfig) {
 		panic("NsqClient config is nil!")
 	}
 
-	reqHttp := httplib.Get(nsqLookupAddr + "/nodes")
+	reqHttp := httplib.Get("http://" + nsqLookupAddr + "/nodes")
 	model := nsqLookupNodesModel{}
 	if err := reqHttp.ToJSON(&model); err != nil {
 		errorInfo := fmt.Sprintf("NsqClient get nodes is error! %v\n", err)
@@ -57,9 +58,15 @@ func (this *NsqClient) Init(nsqLookupAddr string, nsqConfig *NsqConfig) {
 	}
 	this.nsqNodes = &model
 	this.nsqConfig = nsqConfig
+	this.nsqLookupAddr = nsqLookupAddr
 	if this.nsqConfig.DialTimeout == 0 {
 		this.nsqConfig.DialTimeout = 10 * time.Second //10s
+	}
+	if this.nsqConfig.MsgTimeout == 0 {
 		this.nsqConfig.MsgTimeout = 30 * time.Second  //30s
+	}
+	if this.nsqConfig.WriteTimeout == 0 {
+		this.nsqConfig.WriteTimeout = 5 * time.Second //5s
 	}
 }
 
@@ -68,6 +75,7 @@ func (this *NsqClient) CreateProducer() {
 	config := nsq.NewConfig()
 	config.DialTimeout = this.nsqConfig.DialTimeout
 	config.MsgTimeout = this.nsqConfig.MsgTimeout
+	config.WriteTimeout = this.nsqConfig.WriteTimeout
 	this.nsqProducers = make([]*nsq.Producer, 0)
 	for _, node := range this.nsqNodes.Producers {
 		addr := fmt.Sprintf("%v:%v", node.BroadcastAddress, node.TcpPort)
@@ -105,12 +113,12 @@ func (this *NsqClient) CreateConsumer(topicName string, channelName string, hand
 	config := nsq.NewConfig()
 	config.DialTimeout = this.nsqConfig.DialTimeout
 	config.MsgTimeout = this.nsqConfig.MsgTimeout
-	//消费者同时能够处理多少个nsqd的消息,一般设置为与nsqd节点等量的值
-	config.MaxInFlight = len(this.nsqNodes.Producers)
+	//消费者同时能够处理多少个nsqd的消息
+	config.MaxInFlight = len(this.nsqNodes.Producers) * 4
 	consumer, _ := nsq.NewConsumer(topicName, channelName, config)
 	consumer.AddHandler(nsq.HandlerFunc(handle))
-	err := consumer.ConnectToNSQLookupd("123.206.79.254:4761")
+	err := consumer.ConnectToNSQLookupd(this.nsqLookupAddr)
 	if err != nil {
-		beego.Error("Could not connect")
+		beego.Error(fmt.Sprintf("connect lookupd fail %v\n", err))
 	}
 }
