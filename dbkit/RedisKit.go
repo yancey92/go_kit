@@ -124,6 +124,41 @@ func RedisSetMapWithExpire(key string, fields map[string]interface{}, sec time.D
 	return nil
 }
 
+// 设置过期时间
+// @key 	主键
+// @sec		过期时间,单位秒
+func RedisSetExpire(key string, sec time.Duration) error {
+	if key == "" || sec < 0 {
+		return logiccode.RedisParamsErrorCode()
+	}
+	client := getRedisClient()
+	if client == nil {
+		return logiccode.RedisClientErrorCode()
+	}
+	if sec > 0 { //设置KEY过期时间
+		client.Expire(key, sec)
+	}
+	return nil
+}
+// 为哈希表中的字段值加上指定增量值
+// @key    主键
+// @fileds 需要增量的字段值
+// @incr   增量值
+func RedisHIncrBy(key string,fields string,incr int64)error{
+	if key == "" || fields == "" {
+		return logiccode.RedisParamsErrorCode()
+	}
+	client := getRedisClient()
+	if client == nil {
+		return logiccode.RedisClientErrorCode()
+	}
+	err := client.HIncrBy(key, fields,incr).Err()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // 从数据库获取对应键内容
 // @key 	主键
 func RedisGetMap(key string) (map[string]string, error) {
@@ -148,8 +183,8 @@ func RedisGetMap(key string) (map[string]string, error) {
 
 // 从数据库获取对应键内容
 // @key 	主键
-func RedisGetMapVal(key string,value ...string) ([]interface{}, error) {
-	result := make([]interface{},0)
+func RedisGetMapVal(key string, value ...string) ([]interface{}, error) {
+	result := make([]interface{}, 0)
 	if key == "" {
 		return result, logiccode.RedisParamsErrorCode()
 	}
@@ -157,7 +192,7 @@ func RedisGetMapVal(key string,value ...string) ([]interface{}, error) {
 	if client == nil {
 		return result, logiccode.RedisClientErrorCode()
 	}
-	result, err := client.HMGet(key,value...).Result()
+	result, err := client.HMGet(key, value...).Result()
 
 	if err == redis.Nil {
 		return result, logiccode.RedisKeyErrorCode()
