@@ -10,7 +10,7 @@ import (
 //redis 命令文档 http://doc.redisfans.com/
 
 func TestInitRedis(t *testing.T) {
-	InitRedis("traderedisdev.redis.cache.chinacloudapi.cn:6379", "mOuUcyvHCUtvEkakSIqthQIoXQhUc8JDyHA12G/VzkM=", 0)
+	InitRedis("traderedisdev.redis.cache.chinacloudapi.cn:6379", "mOuUcyvHCUtvEkakSIqthQIoXQhUc8JDyHA12G/VzkM=", 0, 10)
 }
 
 func TestRedisSetGetItem(t *testing.T) {
@@ -68,7 +68,7 @@ func TestRedisSetEXItem(t *testing.T) {
 }
 
 func TestBeathRedisSetEXItem(t *testing.T) {
-	InitRedis("127.0.0.1:6379", "", 0)
+	InitRedis("127.0.0.1:6379", "", 0, 10)
 
 	for i := 0; i < 20; i++ {
 		keyName := "key" + strconv.Itoa(i)
@@ -93,7 +93,7 @@ func TestBeathRedisSetEXItem(t *testing.T) {
 }
 
 func TestRedisExists(t *testing.T)  {
-	InitRedis("traderedisdev.redis.cache.chinacloudapi.cn:6379", "mOuUcyvHCUtvEkakSIqthQIoXQhUc8JDyHA12G/VzkM=", 0)
+	InitRedis("traderedisdev.redis.cache.chinacloudapi.cn:6379", "mOuUcyvHCUtvEkakSIqthQIoXQhUc8JDyHA12G/VzkM=", 0, 10)
 
 	result, err := RedisKeyExists("key10")
 	if err != nil {
@@ -103,7 +103,7 @@ func TestRedisExists(t *testing.T)  {
 }
 
 func TestAutoRetryConn(t *testing.T)  {
-	InitRedis("127.0.0.1:6379", "", 0)
+	InitRedis("127.0.0.1:6379", "", 0, 10)
 	result, _ := RedisKeyExists("key10")
 	fmt.Printf("判断结果 %v\n", result)
 
@@ -127,7 +127,7 @@ func TestAutoRetryConn(t *testing.T)  {
 }
 
 func TestRedisSetMapWithExpire(t *testing.T) {
-	InitRedis("127.0.0.1:6379", "", 0)
+	InitRedis("127.0.0.1:6379", "", 0, 10)
 	testMap := make(map[string]interface{},0)
 	testMap["name"] = "张三"
 	testMap["age"] = "20"

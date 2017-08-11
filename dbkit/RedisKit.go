@@ -18,7 +18,8 @@ var (
 // @addr 	数据库地址
 // @passad 	数据库密码,如果没有密码,填空
 // @dbNum 	数据库名称,只能选择0~16之间
-func InitRedis(addr string, passwd string, dbNum int) {
+// @maxConn	最大连接数
+func InitRedis(addr string, passwd string, dbNum int, maxConn int) {
 	if redisInited || redisClient != nil {
 		return
 	}
@@ -28,6 +29,9 @@ func InitRedis(addr string, passwd string, dbNum int) {
 	if dbNum < 0 || dbNum > 16 {
 		panic("redis dbNum is error!")
 	}
+	if maxConn == 0 {
+		maxConn = 10
+	}
 	redisClient = redis.NewClient(&redis.Options{
 		Addr:         addr,
 		Password:     passwd,           //如果没有密码,默认为空
@@ -35,7 +39,7 @@ func InitRedis(addr string, passwd string, dbNum int) {
 		MaxRetries:   3,                //连接失败后重试3次
 		DialTimeout:  10 * time.Second, //拨号超时
 		WriteTimeout: 5 * time.Second,  //写超时
-		PoolSize:     10,               //最大连接数
+		PoolSize:     maxConn,          //最大连接数
 		IdleTimeout:  200 * time.Second,
 	})
 
@@ -140,11 +144,12 @@ func RedisSetExpire(key string, sec time.Duration) error {
 	}
 	return nil
 }
+
 // 为哈希表中的字段值加上指定增量值
 // @key    主键
 // @fileds 需要增量的字段值
 // @incr   增量值
-func RedisHIncrBy(key string,fields string,incr int64)error{
+func RedisHIncrBy(key string, fields string, incr int64) error {
 	if key == "" || fields == "" {
 		return logiccode.RedisParamsErrorCode()
 	}
@@ -152,7 +157,7 @@ func RedisHIncrBy(key string,fields string,incr int64)error{
 	if client == nil {
 		return logiccode.RedisClientErrorCode()
 	}
-	err := client.HIncrBy(key, fields,incr).Err()
+	err := client.HIncrBy(key, fields, incr).Err()
 	if err != nil {
 		return err
 	}

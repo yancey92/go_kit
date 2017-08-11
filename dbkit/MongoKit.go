@@ -34,7 +34,8 @@ type MongoSearch struct {
 // 非SSL协议初始K化数据库
 // @connUrl 连接字符串
 // @dbName  数据库名称
-func InitMongoDB(connUrl string, dbName string) {
+// @maxConn 最大连接数
+func InitMongoDB(connUrl string, dbName string, maxConn int) {
 	if connUrl == "" || dbName == "" {
 		panic("conn url or db name is empty!")
 	}
@@ -47,7 +48,11 @@ func InitMongoDB(connUrl string, dbName string) {
 		panic(err)
 	}
 	mySession.SetMode(mgo.Monotonic, true)
-	mySession.SetPoolLimit(100)
+	if maxConn == 0 {
+		mySession.SetPoolLimit(MAX_POOL_SIZE)
+	} else {
+		mySession.SetPoolLimit(maxConn)
+	}
 	globalSession = mySession
 	connUrl = fullUrl
 	mongoDBName = dbName

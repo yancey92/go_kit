@@ -43,7 +43,7 @@ func TestMongoFindDoc(t *testing.T) {
 }
 
 func TestMongoRemoveAllDoc(t *testing.T) {
-	InitMongoDB("mongodb://localhost:27017", "gumpcome")
+	InitMongoDB("mongodb://localhost:27017", "gumpcome", 10)
 	isOk, err := MongoRemoveAllDoc(&MongoSearch{
 		Collection: "people",
 		Key:        "phone",
