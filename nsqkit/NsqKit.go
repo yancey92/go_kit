@@ -24,9 +24,10 @@ type nsqProducer struct {
 }
 
 type NsqConfig struct {
-	MsgTimeout   time.Duration //消息推送到消费者超时时间
-	DialTimeout  time.Duration //连接nsqd超时时间
-	WriteTimeout time.Duration //往nsqd中写消息超时时间
+	MsgTimeout   time.Duration //消息推送到消费者超时时间,默认30s
+	DialTimeout  time.Duration //连接nsqd超时时间,默认10s
+	WriteTimeout time.Duration //往nsqd中写消息超时时间,默认5s
+	MaxInFlight  int           //消费者单次消费消息最大数量,默认100
 }
 
 type NsqClient struct {
@@ -63,10 +64,13 @@ func (this *NsqClient) Init(nsqLookupAddr string, nsqConfig *NsqConfig) {
 		this.nsqConfig.DialTimeout = 10 * time.Second //10s
 	}
 	if this.nsqConfig.MsgTimeout == 0 {
-		this.nsqConfig.MsgTimeout = 30 * time.Second  //30s
+		this.nsqConfig.MsgTimeout = 30 * time.Second //30s
 	}
 	if this.nsqConfig.WriteTimeout == 0 {
 		this.nsqConfig.WriteTimeout = 5 * time.Second //5s
+	}
+	if this.nsqConfig.MaxInFlight == 0 {
+		this.nsqConfig.MaxInFlight = 100
 	}
 }
 
@@ -114,7 +118,7 @@ func (this *NsqClient) CreateConsumer(topicName string, channelName string, hand
 	config.DialTimeout = this.nsqConfig.DialTimeout
 	config.MsgTimeout = this.nsqConfig.MsgTimeout
 	//消费者同时能够处理多少个nsqd的消息
-	config.MaxInFlight = len(this.nsqNodes.Producers) * 4
+	config.MaxInFlight = this.nsqConfig.MaxInFlight
 	consumer, _ := nsq.NewConsumer(topicName, channelName, config)
 	consumer.AddHandler(nsq.HandlerFunc(handle))
 	err := consumer.ConnectToNSQLookupd(this.nsqLookupAddr)

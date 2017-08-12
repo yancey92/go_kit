@@ -157,3 +157,28 @@ func TestRedisSetMapWithExpire(t *testing.T) {
 		t.Logf("读取成功resultVal %s\n", resultVal)
 	}
 }
+
+func TestRedisPool(t *testing.T)  {
+	InitRedis("traderedisdev.redis.cache.chinacloudapi.cn:6379", "mOuUcyvHCUtvEkakSIqthQIoXQhUc8JDyHA12G/VzkM=", 0, 10)
+	for {
+		err := RedisSet("key0", "key0value")
+		if err != nil {
+			fmt.Printf("插入失败 %v\n", err)
+			t.Fail()
+		}
+
+		stats, _ := RedisGetPoolStats()
+		//查看连接池状态
+		fmt.Printf("连接池状态 %#v\n", stats)
+
+		result, err := RedisGet("key0")
+		if err != nil {
+			fmt.Printf("读取失败%v\n", err)
+			t.Fail()
+		} else {
+			fmt.Printf("读取成功 %s\n", result)
+		}
+		time.Sleep(10 * time.Second)
+	}
+
+}
