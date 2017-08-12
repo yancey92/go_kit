@@ -31,6 +31,7 @@ const (
 	WorkStatusError = 120026 // 工作状态错误
 	SaleStatusError = 120027 // 售卖状态错误
 	DeviceDisable = 120028 // 设备不可用
+	DeviceNoPointLocation = 120030 // 设备没有点位
 
 	// 方案
 	PlanStatusError = 120003 // 方案状态不合法。
