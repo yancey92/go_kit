@@ -5,6 +5,7 @@ import (
 	"time"
 	"strconv"
 	"fmt"
+	"sync"
 )
 
 //redis 命令文档 http://doc.redisfans.com/
@@ -159,26 +160,22 @@ func TestRedisSetMapWithExpire(t *testing.T) {
 }
 
 func TestRedisPool(t *testing.T)  {
-	InitRedis("traderedisdev.redis.cache.chinacloudapi.cn:6379", "mOuUcyvHCUtvEkakSIqthQIoXQhUc8JDyHA12G/VzkM=", 0, 10)
-	for {
-		err := RedisSet("key0", "key0value")
-		if err != nil {
-			fmt.Printf("插入失败 %v\n", err)
-			t.Fail()
-		}
-
-		stats, _ := RedisGetPoolStats()
-		//查看连接池状态
-		fmt.Printf("连接池状态 %#v\n", stats)
-
-		result, err := RedisGet("key0")
-		if err != nil {
-			fmt.Printf("读取失败%v\n", err)
-			t.Fail()
-		} else {
-			fmt.Printf("读取成功 %s\n", result)
-		}
-		time.Sleep(10 * time.Second)
+	InitRedis("homeredisdev.redis.cache.chinacloudapi.cn:6379", "D0d3HYNDSgc8C2Zv/oQ497v6EY1NL6KSX2MTuHtAWcQ=", 0, 1000)
+	wg:=&sync.WaitGroup{}
+	wg.Add(1000)
+	for i := 0; i < 1000; i++ {
+		go func(k int) {
+			err := RedisSet(fmt.Sprintf("key%v", k), fmt.Sprintf("keyvalue%v", k))
+			if err != nil {
+				fmt.Printf("插入失败 %v\n", err)
+				t.Fail()
+			}
+			wg.Done()
+		}(i)
 	}
+	wg.Wait()
+	stats, _ := RedisGetPoolStats()
+	//查看连接池状态
+	fmt.Printf("连接池状态 %#v\n", stats)
 
 }

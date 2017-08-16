@@ -27,7 +27,7 @@ type NsqConfig struct {
 	MsgTimeout   time.Duration //消息推送到消费者超时时间,默认30s
 	DialTimeout  time.Duration //连接nsqd超时时间,默认10s
 	WriteTimeout time.Duration //往nsqd中写消息超时时间,默认5s
-	MaxInFlight  int           //消费者单次消费消息最大数量,默认100
+	MaxInFlight  int           //消费者单次消费消息最大数量,默认40
 }
 
 type NsqClient struct {
@@ -70,7 +70,7 @@ func (this *NsqClient) Init(nsqLookupAddr string, nsqConfig *NsqConfig) {
 		this.nsqConfig.WriteTimeout = 5 * time.Second //5s
 	}
 	if this.nsqConfig.MaxInFlight == 0 {
-		this.nsqConfig.MaxInFlight = 100
+		this.nsqConfig.MaxInFlight = 40
 	}
 }
 
