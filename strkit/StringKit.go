@@ -49,7 +49,7 @@ func StrToInt64(str string) (int64, error) {
 }
 
 // @Title Int string to int
-func StrToInt(str string) (int, error)  {
+func StrToInt(str string) (int, error) {
 	return strconv.Atoi(str)
 }
 
@@ -78,10 +78,9 @@ func StrJoin(strs ...string) string {
 // usage:
 //	GetStrLen("hello ")
 // 	return 6
-func GetStrLen(str string) int  {
+func GetStrLen(str string) int {
 	return utf8.RuneCountInString(str)
 }
-
 
 // @Title 字符串构建对象
 // @Description
@@ -109,7 +108,6 @@ func (sb *StringBuilder) Append(str string) *StringBuilder {
 func (sb *StringBuilder) ToString() string {
 	return sb.buf.String()
 }
-
 
 // @Title 获取字符串长度
 // @Description

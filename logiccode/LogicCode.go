@@ -2,9 +2,9 @@
 package logiccode
 
 import (
-	"strconv"
 	"git.gumpcome.com/go_kit/strkit"
 	"github.com/astaxie/beego"
+	"strconv"
 )
 
 func New(code int, msg string) error {

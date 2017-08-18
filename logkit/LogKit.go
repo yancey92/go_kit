@@ -18,7 +18,7 @@ func InitLog() {
 	}
 
 	logDir := "logs"
-	logFile := logDir + string(os.PathSeparator) +  "server.log"
+	logFile := logDir + string(os.PathSeparator) + "server.log"
 	os.MkdirAll(logDir, 0777)
 
 	if logmode == LogDevMode {

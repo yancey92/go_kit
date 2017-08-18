@@ -3,8 +3,8 @@ package idkit
 
 import (
 	"crypto/md5"
-	"io"
 	"encoding/hex"
+	"io"
 	"strings"
 )
 

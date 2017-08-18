@@ -4,6 +4,7 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/base64"
+	"encoding/xml"
 	"errors"
 	"fmt"
 	"git.gumpcome.com/go_kit/strkit"
@@ -11,13 +12,12 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/httplib"
 	"github.com/astaxie/beego/logs"
+	"net/http"
 	"net/url"
 	"os"
 	"strconv"
-	"net/http"
-	"time"
-	"encoding/xml"
 	"strings"
+	"time"
 )
 
 const (
@@ -27,8 +27,8 @@ const (
 
 // 服务总线消息模型
 type ServiceBusMsgMode struct {
-	XMLName     xml.Name `xml:"entry"`
-	Content     string   `xml:"content"`
+	XMLName xml.Name `xml:"entry"`
+	Content string   `xml:"content"`
 }
 
 type myServiceBus struct {
@@ -103,7 +103,7 @@ func SendMessageToServiceBus(uri string, keyName string, key string, message str
 	req := httplib.Post(uri + "/messages")
 	req.Header("Authorization", token)
 	req.Header("ContentType", "application/atom+xml;type=entry;charset=utf-8")
-	req.SetTimeout(60 * time.Second, 60 * time.Second)
+	req.SetTimeout(60*time.Second, 60*time.Second)
 
 	msgBuffer := strkit.StringBuilder{}
 	msgBuffer.Append("<entry xmlns='http://www.w3.org/2005/Atom'><content type='application/xml'>").Append(message).Append("</content></entry>")
@@ -130,7 +130,7 @@ func receiveMessageFromServiceBus(uri string, keyName string, key string, subNam
 	mySerBus.logger.Info(fmt.Sprintf("开始接收服务总线消息, uri=%s", uri))
 	req := httplib.Post(uri + "/subscriptions" + subName + "/messages/head")
 	req.Header("Authorization", token)
-	req.SetTimeout(60 * time.Second, 60 * time.Second)
+	req.SetTimeout(60*time.Second, 60*time.Second)
 
 	result, err := req.String()
 	resp, err := req.Response()
@@ -158,7 +158,7 @@ func receiveMessageFromServiceBus(uri string, keyName string, key string, subNam
 		mySerBus.logger.Info(fmt.Sprintf("开始请求删除服务总线消息 location=%s", location))
 		req = httplib.Delete(location)
 		req.Header("Authorization", token)
-		req.SetTimeout(60 * time.Second, 60 * time.Second)
+		req.SetTimeout(60*time.Second, 60*time.Second)
 		_, err = req.String()
 		resp, err = req.Response()
 		if err != nil {
@@ -176,7 +176,7 @@ func receiveMessageFromServiceBus(uri string, keyName string, key string, subNam
 // @param key 			密钥
 // @param subName		订阅名称
 // @param func(msg string) bool 消息处理器
-func StartReceiveMessageFromServiceBusServer(uri string, keyName string, key string, subName string, msgProcessor func(msg string) bool)  {
+func StartReceiveMessageFromServiceBusServer(uri string, keyName string, key string, subName string, msgProcessor func(msg string) bool) {
 	go func() {
 		for {
 			receiveMessageFromServiceBus(uri, keyName, key, subName, msgProcessor)

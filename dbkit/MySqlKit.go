@@ -508,7 +508,7 @@ func PaginateInMysql(myDbCon *sql.DB, pageNumber int, pageSize int, selectSql st
 
 	//计算共多少页记录
 	totalPage := totalRow / pageSize
-	if totalRow % pageSize != 0 {
+	if totalRow%pageSize != 0 {
 		totalPage++
 	}
 

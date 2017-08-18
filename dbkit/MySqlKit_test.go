@@ -2,12 +2,12 @@ package dbkit
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"git.gumpcome.com/go_kit/idkit"
 	"git.gumpcome.com/go_kit/timekit"
 	"github.com/astaxie/beego/logs"
 	"testing"
-	"encoding/json"
 )
 
 //INSERT INTO user(name,age,email,gender,height,interests) VALUES (?,?,?,?,?,?)
@@ -130,14 +130,14 @@ func TestDeleteInMysql(t *testing.T) {
 
 func TestFindInMysql(t *testing.T) {
 	//sql := `SELECT name AS user_name, age As user_age FROM user LIMIT 1`
-	sql := `SELECT t1.id, t1.age, t2.content, t2.unixtime FROM user t1 LEFT JOIN user_address t2 ON t2.userid = t1.id;`;
+	sql := `SELECT t1.id, t1.age, t2.content, t2.unixtime FROM user t1 LEFT JOIN user_address t2 ON t2.userid = t1.id;`
 	intItems := []string{"user_age", "unixtime"}
 	result, err := FindInMysql(GetConn(), sql, intItems)
 	if err != nil {
 		fmt.Printf("%v", err)
 		t.Fail()
 	}
-	data, _ :=json.MarshalIndent(result, "", "  ")
+	data, _ := json.MarshalIndent(result, "", "  ")
 	fmt.Println(string(data))
 }
 
@@ -149,7 +149,7 @@ func TestFindFirstInMysql(t *testing.T) {
 		fmt.Printf("%v", err)
 		t.Fail()
 	}
-	data, _ :=json.MarshalIndent(result, "", "  ")
+	data, _ := json.MarshalIndent(result, "", "  ")
 	fmt.Println(string(data))
 }
 
@@ -160,7 +160,7 @@ func TestFindFirstInMysql2(t *testing.T) {
 		fmt.Printf("%v", err)
 		t.Fail()
 	}
-	data, _ :=json.MarshalIndent(result, "", "  ")
+	data, _ := json.MarshalIndent(result, "", "  ")
 	fmt.Println(string(data))
 }
 
@@ -172,7 +172,7 @@ func TestPaginateInMysql(t *testing.T) {
 		fmt.Printf("%v", err)
 		t.Fail()
 	}
-	data, _ :=json.MarshalIndent(result, "", "  ")
+	data, _ := json.MarshalIndent(result, "", "  ")
 	fmt.Println(string(data))
 }
 

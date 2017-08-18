@@ -1,12 +1,12 @@
 package logickit
 
 import (
-	"strings"
 	"fmt"
-	"github.com/astaxie/beego/httplib"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/httplib"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 // 批量更新售货机版本号
@@ -14,20 +14,20 @@ type RespBatchUpdateSvmConfigVersion struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
 	Data struct {
-		     IsAllSuccess string   `json:"is_all_success" desc:"Y:全部成功，N:全部失败"`
-		     FailSvms     []int    `json:"fail_svms" desc:"版本号更新失败的售货机id集合"`
-	     } `json:"data"`
+		IsAllSuccess string `json:"is_all_success" desc:"Y:全部成功，N:全部失败"`
+		FailSvms     []int  `json:"fail_svms" desc:"版本号更新失败的售货机id集合"`
+	} `json:"data"`
 }
+
 // 更新单个售货机版本号
 type RespUpdateSvmConfigVersion struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
 	Data struct {
-		     IsSuccess string   `json:"is_success" desc:"Y：更新成功，N：更新失败"`
-		     SvmId     int    `json:"svm_id" desc:"版本号更新失败的售货机id"`
-	     } `json:"data"`
+		IsSuccess string `json:"is_success" desc:"Y：更新成功，N：更新失败"`
+		SvmId     int    `json:"svm_id" desc:"版本号更新失败的售货机id"`
+	} `json:"data"`
 }
-
 
 // 批量更新售货机版本号（只要有一个售货机版本号更新失败，则返回false）
 // return:是否成功，更新版本号失败的售货机id
@@ -35,7 +35,7 @@ func ConfigVersionBatchUpdate(url string, svmIds []int) (bool, []int) {
 	// 批量修改售货机版本号可放置售货机的最大数量
 	batchEditSvmIdNum := 50
 	forNum := len(svmIds) / batchEditSvmIdNum
-	if len(svmIds) % batchEditSvmIdNum > 0 {
+	if len(svmIds)%batchEditSvmIdNum > 0 {
 		forNum = forNum + 1
 	}
 	// 批量更新结果
@@ -44,18 +44,17 @@ func ConfigVersionBatchUpdate(url string, svmIds []int) (bool, []int) {
 	// 批量升级svm版本号
 	for i := 1; i <= forNum; i++ {
 		var svmidsBatch []int
-		if i == forNum && len(svmIds) % batchEditSvmIdNum > 0 {
-			svmidsBatch = svmIds[(i - 1) * batchEditSvmIdNum:]
+		if i == forNum && len(svmIds)%batchEditSvmIdNum > 0 {
+			svmidsBatch = svmIds[(i-1)*batchEditSvmIdNum:]
 		} else {
-			svmidsBatch = svmIds[(i - 1) * batchEditSvmIdNum : batchEditSvmIdNum]
+			svmidsBatch = svmIds[(i-1)*batchEditSvmIdNum : batchEditSvmIdNum]
 		}
 		svmIdStr := strings.Replace(strings.Replace(strings.Replace(fmt.Sprint(svmidsBatch), " ", ",", batchEditSvmIdNum), "[", "", 1), "]", "", 1)
 		resp := RespBatchUpdateSvmConfigVersion{}
-		beego.Info("批量修改售货机版本号URl：",url)
+		beego.Info("批量修改售货机版本号URl：", url)
 		if err := httplib.Post(url).
 			Param("svm_ids", svmIdStr).
-			ToJSON(&resp);
-			err != nil {
+			ToJSON(&resp); err != nil {
 			// 结构体转义失败
 			beego.Error(err, svmidsBatch)
 			isOk = false

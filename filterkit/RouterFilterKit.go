@@ -2,10 +2,10 @@ package filterkit
 
 import (
 	"fmt"
-	"github.com/astaxie/beego/context"
 	"git.gumpcome.com/go_kit/logkit"
-	"time"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/context"
+	"time"
 )
 
 var apiStatistics = make(map[string]*apiInfo)

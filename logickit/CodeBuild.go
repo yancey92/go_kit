@@ -1,13 +1,13 @@
 package logickit
 
 import (
-	"regexp"
-	"github.com/astaxie/beego"
 	"git.gumpcome.com/go_kit/logiccode"
-	"time"
-	"git.gumpcome.com/go_kit/timekit"
-	"strconv"
 	"git.gumpcome.com/go_kit/strkit"
+	"git.gumpcome.com/go_kit/timekit"
+	"github.com/astaxie/beego"
+	"regexp"
+	"strconv"
+	"time"
 )
 
 // 常规实物营销方案code获取
@@ -25,7 +25,7 @@ func GetCommonDiscountPlanCode(planType int, companyId int) (string, error) {
 		code, err = planCodeBuild(Code_Goods_Plan_Many, companyId)
 	default:
 		beego.Error("方案类型错误", planType)
-		return "", logiccode.New(ParamValueError, "方案类型错误", )
+		return "", logiccode.New(ParamValueError, "方案类型错误")
 	}
 	if err != nil {
 		beego.Error(err)

@@ -1,11 +1,11 @@
 package dbkit
 
 import (
+	"fmt"
+	"strconv"
+	"sync"
 	"testing"
 	"time"
-	"strconv"
-	"fmt"
-	"sync"
 )
 
 //redis 命令文档 http://doc.redisfans.com/
@@ -35,7 +35,7 @@ func TestRedisSetGetItem(t *testing.T) {
 }
 
 func TestRedisSetEXItem(t *testing.T) {
-	err := RedisSetWithExpire("key1", "key1value", 10 * time.Second)
+	err := RedisSetWithExpire("key1", "key1value", 10*time.Second)
 	if err != nil {
 		t.Logf("插入失败 %v\n", err)
 		t.Fail()
@@ -93,7 +93,7 @@ func TestBeathRedisSetEXItem(t *testing.T) {
 	}
 }
 
-func TestRedisExists(t *testing.T)  {
+func TestRedisExists(t *testing.T) {
 	InitRedis("traderedisdev.redis.cache.chinacloudapi.cn:6379", "mOuUcyvHCUtvEkakSIqthQIoXQhUc8JDyHA12G/VzkM=", 0, 10)
 
 	result, err := RedisKeyExists("key10")
@@ -103,7 +103,7 @@ func TestRedisExists(t *testing.T)  {
 	t.Logf("判断结果 %v\n", result)
 }
 
-func TestAutoRetryConn(t *testing.T)  {
+func TestAutoRetryConn(t *testing.T) {
 	InitRedis("127.0.0.1:6379", "", 0, 10)
 	result, _ := RedisKeyExists("key10")
 	fmt.Printf("判断结果 %v\n", result)
@@ -129,7 +129,7 @@ func TestAutoRetryConn(t *testing.T)  {
 
 func TestRedisSetMapWithExpire(t *testing.T) {
 	InitRedis("127.0.0.1:6379", "", 0, 10)
-	testMap := make(map[string]interface{},0)
+	testMap := make(map[string]interface{}, 0)
 	testMap["name"] = "张三"
 	testMap["age"] = "20"
 	err := RedisSetMap("key0", testMap)
@@ -150,7 +150,7 @@ func TestRedisSetMapWithExpire(t *testing.T) {
 		t.Logf("读取成功result %s\n", result)
 	}
 
-	resultVal, err := RedisGetMapVal("key0","name","age")
+	resultVal, err := RedisGetMapVal("key0", "name", "age")
 	if err != nil {
 		t.Logf("读取失败%v\n", err)
 		t.Fail()
@@ -159,9 +159,9 @@ func TestRedisSetMapWithExpire(t *testing.T) {
 	}
 }
 
-func TestRedisPool(t *testing.T)  {
+func TestRedisPool(t *testing.T) {
 	InitRedis("homeredisdev.redis.cache.chinacloudapi.cn:6379", "D0d3HYNDSgc8C2Zv/oQ497v6EY1NL6KSX2MTuHtAWcQ=", 0, 1000)
-	wg:=&sync.WaitGroup{}
+	wg := &sync.WaitGroup{}
 	wg.Add(1000)
 	for i := 0; i < 1000; i++ {
 		go func(k int) {

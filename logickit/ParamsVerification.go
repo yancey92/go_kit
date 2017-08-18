@@ -2,12 +2,12 @@ package logickit
 
 import (
 	"fmt"
-	"github.com/astaxie/beego"
-	"unicode/utf8"
-	"strconv"
-	"regexp"
 	"git.gumpcome.com/go_kit/strkit"
+	"github.com/astaxie/beego"
+	"regexp"
+	"strconv"
 	"strings"
+	"unicode/utf8"
 )
 
 // 校验公司号
@@ -49,7 +49,7 @@ func VerificationCompanyType(companyType int) bool {
 
 // 校验支付方式
 func VerificationPayWay(payWay int) bool {
-	if !(0 <= payWay&& payWay <= 12) {
+	if !(0 <= payWay && payWay <= 12) {
 		beego.Error("支付方式错误", fmt.Sprintf("支付方式=%v", payWay))
 		return false
 	}
@@ -96,7 +96,7 @@ func VerificationSvmId(svmId int) bool {
 
 // 校验售货机销售状态
 func VerificationSvmSaleStatus(saleStatus int) bool {
-	if !( saleStatus == 10 || saleStatus == 11) {
+	if !(saleStatus == 10 || saleStatus == 11) {
 		beego.Error("校验售货机销售状态错误", fmt.Sprintf("售货机销售状态：%v", saleStatus))
 		return false
 	}
@@ -105,7 +105,7 @@ func VerificationSvmSaleStatus(saleStatus int) bool {
 
 // 校验售货机运营状态
 func VerificationSvmWorkStatus(workStatus int) bool {
-	if !( workStatus == 10 || workStatus == 11 || workStatus == 12) {
+	if !(workStatus == 10 || workStatus == 11 || workStatus == 12) {
 		beego.Error("校验售货机运营状态错误", fmt.Sprintf("售货机运营状态：%v", workStatus))
 		return false
 	}
@@ -114,7 +114,7 @@ func VerificationSvmWorkStatus(workStatus int) bool {
 
 // 校验售货机经（纬）度
 func VerificationSvmLonOrLat(lonOrLat string) bool {
-	if ( utf8.RuneCountInString(lonOrLat) > 15 ) {
+	if utf8.RuneCountInString(lonOrLat) > 15 {
 		beego.Error("售货机经度或维度长度错误", fmt.Sprintf("售货机经度或维度：%v", lonOrLat))
 		return false
 	} else if _, err := strconv.ParseFloat(lonOrLat, 10); err != nil {
@@ -245,7 +245,7 @@ func VerificationPlanStatus(status int) bool {
 // 校验虚拟商品方案类型
 func VerificationVgoodsType(vgoodsType int) bool {
 	// '扫码虚拟商品：11，套餐虚拟商品：12，惊喜虚拟商品：13'
-	if !( vgoodsType == Vgoods_Plan_Qrcode ||
+	if !(vgoodsType == Vgoods_Plan_Qrcode ||
 		vgoodsType == Vgoods_Plan_Package ||
 		vgoodsType == Vgoods_Plan_Surprise) {
 		beego.Error("虚拟商品方案类型错误", fmt.Sprintf("虚拟商品方案类型：%v", vgoodsType))
@@ -257,8 +257,8 @@ func VerificationVgoodsType(vgoodsType int) bool {
 // 校验虚拟商品方案类型
 func VerificationAdType(adType int) bool {
 	// 10：图片广告 11：视频广告
-	if !( adType == 10 ||
-		adType == 11 ) {
+	if !(adType == 10 ||
+		adType == 11) {
 		beego.Error("广告类型错误", fmt.Sprintf("广告类型：%v", adType))
 		return false
 	}
@@ -267,8 +267,8 @@ func VerificationAdType(adType int) bool {
 
 func VerificationGoodsStatus(status int) bool {
 	// 10：上架，11：下架
-	if !( status == 10 ||
-		status == 11 ) {
+	if !(status == 10 ||
+		status == 11) {
 		beego.Error("商品状态错误", fmt.Sprintf("商品状态：%v", status))
 		return false
 	}

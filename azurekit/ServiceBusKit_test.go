@@ -1,12 +1,12 @@
 package azurekit
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 	"time"
 )
 
-func TestSendMessageToServiceBus(t *testing.T)  {
+func TestSendMessageToServiceBus(t *testing.T) {
 	InitServiceBus("dev")
 
 	uri := "https://dyltest.servicebus.chinacloudapi.cn/dyltest-topic"
@@ -22,7 +22,7 @@ func TestSendMessageToServiceBus(t *testing.T)  {
 	fmt.Println("消息发送到队列成功...")
 }
 
-func TestStartReceiveMessageFromServiceBusServer(t *testing.T)  {
+func TestStartReceiveMessageFromServiceBusServer(t *testing.T) {
 	InitServiceBus("dev")
 
 	uri := "https://dyltest.servicebus.chinacloudapi.cn/dyltest-topic"

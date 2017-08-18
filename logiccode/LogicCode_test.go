@@ -1,8 +1,8 @@
 package logiccode
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 )
 
 func TestLogicCode_Error(t *testing.T) {

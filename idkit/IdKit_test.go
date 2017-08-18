@@ -1,8 +1,8 @@
 package idkit
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 )
 
 func TestCreateUniqueId(t *testing.T) {
