@@ -194,8 +194,10 @@ func getSession() (*mgo.Session, error) {
 		return nil, logiccode.MongoSessionErrorCode()
 	}
 	isSessionOk := true
+	globalSession.Refresh()
 	err := globalSession.Ping()
 	if err != nil {
+		beego.Error(fmt.Sprintf("globalSession ping fail %v", err))
 		isSessionOk = false
 		globalSession.Refresh()
 		for i := 0; i < MAX_RETRIES; i++ {
