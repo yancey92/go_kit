@@ -3,6 +3,8 @@ package logickit
 import (
 	"git.gumpcome.com/go_kit/logiccode"
 	"git.gumpcome.com/go_kit/strkit"
+	"strings"
+	"strconv"
 )
 
 // 根据订单号获取分表信息
@@ -101,4 +103,24 @@ func GetRefundTabelInfoWithYearByOutTradeNo(outTradeNo string) (string, string, 
 	orderTable := "order_refund_" + orderYear
 
 	return orderTable, orderYear, orderMonth, orderDay, nil
+}
+// 根据订单号获取设备号、公司号
+// @outTradeNo 商户订单号
+// 返回值
+// 1:设备号
+// 2:公司号
+func GetCompanyIdByOutTradeNo(outTradeNo string) (int, int, error) {
+	outTradeNoStrList := strings.Split(outTradeNo, "X")
+	if len(outTradeNoStrList) < 2{
+		return 	0, 0, logiccode.New(120017, "依据订单号获取设备,公司号错误outTradeNo="+outTradeNo)
+	}
+	svmId ,err := strconv.Atoi(outTradeNoStrList[1])
+	if err != nil{
+		return 	0, 0, logiccode.New(120017, "依据订单号获取设备号错误outTradeNo="+outTradeNo)
+	}
+	companyId ,err := strconv.Atoi(outTradeNoStrList[2])
+	if err != nil{
+		return 	0, 0, logiccode.New(120017, "依据订单号获取公司号错误outTradeNo="+outTradeNo)
+	}
+	return svmId,companyId, nil
 }
