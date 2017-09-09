@@ -22,7 +22,7 @@ func InitLog() {
 	os.MkdirAll(logDir, 0777)
 
 	if logmode == LogDevMode {
-		beego.SetLevel(beego.LevelInformational)
+		beego.SetLevel(beego.LevelDebug)
 	} else {
 		beego.SetLevel(beego.LevelInformational)
 	}
