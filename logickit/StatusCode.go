@@ -55,6 +55,10 @@ const (
 	PaysCodeError             = 120024 // 支付二维码获取失败
 	BufferOperationError      = 120025 // 缓存操作失败
 
+	// 目录文件
+	FileReadError  = 130001 // 文件读错误
+	FileWriteError = 130002 // 文件写错误
+
 )
 
 const (
