@@ -49,7 +49,7 @@ func VerificationCompanyType(companyType int) bool {
 
 // 校验支付方式
 func VerificationPayWay(payWay int) bool {
-	if !(-1 <= payWay && payWay <= 12) {
+	if !(-1 <= payWay && payWay <= 13) {
 		beego.Error("支付方式错误", fmt.Sprintf("支付方式=%v", payWay))
 		return false
 	}
