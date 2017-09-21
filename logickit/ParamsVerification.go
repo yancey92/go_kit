@@ -211,7 +211,7 @@ func VerificationPageNumber(number int) bool {
 
 // 校验页面展示数量
 func VerificationPageSize(size int) bool {
-	if !(0 <= size && size <= 50) {
+	if !(0 <= size && size <= 100) {
 		beego.Error("页面展示数目错误", fmt.Sprintf("页面展示数目：%v", size))
 		return false
 	}
