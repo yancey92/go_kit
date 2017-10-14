@@ -55,6 +55,7 @@ const (
 	PriceIsZero               = 120023 // 价格为0
 	PaysCodeError             = 120024 // 支付二维码获取失败
 	BufferOperationError      = 120025 // 缓存操作失败
+	KeyNotExistRedis          = 100018 // redis中获取key不存在
 
 	// 目录文件
 	FileReadError  = 130001 // 文件读错误
