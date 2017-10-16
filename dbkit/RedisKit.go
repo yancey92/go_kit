@@ -255,3 +255,20 @@ func getRedisClient() *redis.Client {
 	}
 	return redisClient
 }
+
+// Redis DEL 命令用于删除已存在的键。不存在的 key 会被忽略。
+// @key 	主键
+func RedisDel(key string) error {
+	if key == "" {
+		return logiccode.RedisParamsErrorCode()
+	}
+	client := getRedisClient()
+	if client == nil {
+		return logiccode.RedisClientErrorCode()
+	}
+	_, err := client.Del(key).Result()
+	if err != nil {
+		return err
+	}
+	return nil
+}
