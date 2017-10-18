@@ -128,6 +128,77 @@ func RedisSetMapWithExpire(key string, fields map[string]interface{}, sec time.D
 	return nil
 }
 
+// 向数据库中添加键值对内容,值是一组set集合,无过期时间
+// @key 	主键
+// @fields 	内容
+func RedisSetSAdd(key string, fields interface{}) error {
+	return RedisSetSAddWithExpire(key, fields, 0)
+}
+
+// 向数据库中添加键值对内容,,值是一组set集合,带过期时间
+// @key 	主键
+// @fields 	内容
+// @sec		过期时间,单位秒,0:永不过期
+func RedisSetSAddWithExpire(key string, fields interface{}, sec time.Duration) error {
+	if key == "" || fields == nil {
+		return logiccode.RedisParamsErrorCode()
+	}
+	client := getRedisClient()
+	if client == nil {
+		return logiccode.RedisClientErrorCode()
+	}
+	err := client.SAdd(key, fields).Err()
+	if err != nil {
+		return err
+	}
+	if sec > 0 { //设置KEY过期时间
+		client.Expire(key, sec)
+	}
+	return nil
+}
+
+// 从数据库中移除并返回集合中的一个随机元素
+// @key 	主键
+// @count 	数量
+func RedisSPop(key string, count int64) ([]string, error) {
+	if key == "" {
+		return nil, logiccode.RedisParamsErrorCode()
+	}
+	client := getRedisClient()
+	if client == nil {
+		return nil, logiccode.RedisClientErrorCode()
+	}
+	result, err := client.SPopN(key, count).Result()
+	if err == redis.Nil {
+		return nil, logiccode.RedisKeyErrorCode()
+	} else if err != nil {
+		return nil, err
+	} else {
+		return result, nil
+	}
+}
+
+// 返回集合 key 的基数(集合中元素的数量)
+// @key 	主键
+// @count 	数量
+func RedisSCard(key string) (int64, error) {
+	if key == "" {
+		return 0, logiccode.RedisParamsErrorCode()
+	}
+	client := getRedisClient()
+	if client == nil {
+		return 0, logiccode.RedisClientErrorCode()
+	}
+	result, err := client.SCard(key).Result()
+	if err == redis.Nil {
+		return 0, logiccode.RedisKeyErrorCode()
+	} else if err != nil {
+		return 0, err
+	} else {
+		return result, nil
+	}
+}
+
 // 设置过期时间
 // @key 	主键
 // @sec		过期时间,单位秒
