@@ -43,6 +43,10 @@ const (
 	PlanGooodsExceededLimit = 120009 // 营销方案商品数量超出限制。
 	PlanGoodsNotOnly        = 120010 // 营销方案售卖商品不唯一错误。
 
+	//取货码营销方案
+	CodeIsUsed    = 120011 //取货码已被使用
+	CodeIsInvalid = 120012 //取货码无效
+	SvmPlanError  = 120013 //获取方案配置售货机数据失败
 	// 其他
 	PageCountStringToIntError = 100009 //
 	ParamValueError           = 100301 // 参数错误
