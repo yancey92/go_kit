@@ -131,15 +131,15 @@ func RedisSetMapWithExpire(key string, fields map[string]interface{}, sec time.D
 // 向数据库中添加键值对内容,值是一组set集合,无过期时间
 // @key 	主键
 // @fields 	内容
-func RedisSetSAdd(key string, fields interface{}) error {
-	return RedisSetSAddWithExpire(key, fields, 0)
+func RedisSetSAdd(key string, fields []interface{}) error {
+	return RedisSetSAddWithExpire(key, 0, fields)
 }
 
 // 向数据库中添加键值对内容,,值是一组set集合,带过期时间
 // @key 	主键
 // @fields 	内容
 // @sec		过期时间,单位秒,0:永不过期
-func RedisSetSAddWithExpire(key string, fields interface{}, sec time.Duration) error {
+func RedisSetSAddWithExpire(key string, sec time.Duration, fields []interface{}) error {
 	if key == "" || fields == nil {
 		return logiccode.RedisParamsErrorCode()
 	}
@@ -147,7 +147,7 @@ func RedisSetSAddWithExpire(key string, fields interface{}, sec time.Duration) e
 	if client == nil {
 		return logiccode.RedisClientErrorCode()
 	}
-	err := client.SAdd(key, fields).Err()
+	err := client.SAdd(key, fields...).Err()
 	if err != nil {
 		return err
 	}
