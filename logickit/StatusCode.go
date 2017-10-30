@@ -47,6 +47,7 @@ const (
 	CodeIsUsed    = 130011 //取货码已被使用
 	CodeIsInvalid = 130012 //取货码无效
 	SvmPlanError  = 130013 //获取方案配置售货机数据失败
+	CodeIsLocked  = 130014 //取货码已被锁定
 	// 其他
 	PageCountStringToIntError = 100009 //
 	ParamValueError           = 100301 // 参数错误
@@ -98,6 +99,8 @@ const (
 	Code_Goods_Plan_Home = "E" // 首页商品营销方案
 	Code_Plan_Ads        = "F" // 广告营销方案
 	Code_Plan_PayTag     = "G" // 支付标签营销方案
+
+	Exchange_Plan_code = "K" //取货码方案code
 
 )
 

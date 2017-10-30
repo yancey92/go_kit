@@ -33,6 +33,15 @@ func GetCommonDiscountPlanCode(planType int, companyId int) (string, error) {
 	return code, err
 }
 
+//取货码活动code码
+func GetExchangPlanCode(companyId int) (string, error) {
+	code, err := planCodeBuild(Exchange_Plan_code, companyId)
+	if err != nil {
+		beego.Error(err)
+	}
+	return code, err
+}
+
 // 复杂营销方案（套餐，扫码虚拟商品，惊喜虚拟商品）
 func GetComplexPlanCode(planType int, companyId int) (string, error) {
 	var code string
