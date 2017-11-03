@@ -22,6 +22,7 @@ const (
 	AccountNotBelongsGroup   = 120019 // 账户与群组无管理关系。
 	NotIsDispatcher          = 120011 // 非总调度员角色。
 	AccountDisable           = 120012 // 账户不可用。
+	AccountAuthFail          = 120020 //账户鉴权失败
 
 	// 设备
 	SvmAuthError                       = 100302 // 售货机认证错误
@@ -42,6 +43,11 @@ const (
 	PlanGooodsExceededLimit = 120009 // 营销方案商品数量超出限制。
 	PlanGoodsNotOnly        = 120010 // 营销方案售卖商品不唯一错误。
 
+	//取货码营销方案
+	CodeIsUsed    = 130011 //取货码已被使用
+	CodeIsInvalid = 130012 //取货码无效
+	SvmPlanError  = 130013 //获取方案配置售货机数据失败
+	CodeIsLocked  = 130014 //取货码已被锁定
 	// 其他
 	PageCountStringToIntError = 100009 //
 	ParamValueError           = 100301 // 参数错误
@@ -54,6 +60,7 @@ const (
 	PriceIsZero               = 120023 // 价格为0
 	PaysCodeError             = 120024 // 支付二维码获取失败
 	BufferOperationError      = 120025 // 缓存操作失败
+	KeyNotExistRedis          = 100018 // redis中获取key不存在
 
 	// 目录文件
 	FileReadError  = 130001 // 文件读错误
@@ -92,6 +99,8 @@ const (
 	Code_Goods_Plan_Home = "E" // 首页商品营销方案
 	Code_Plan_Ads        = "F" // 广告营销方案
 	Code_Plan_PayTag     = "G" // 支付标签营销方案
+
+	Exchange_Plan_code = "K" //取货码方案code
 
 )
 
