@@ -159,7 +159,6 @@ func RedisSetSAddWithExpire(key string, sec time.Duration, fields []interface{})
 
 // 从数据库中移除并返回集合中的一个随机元素
 // @key 	主键
-// @count 	数量
 func RedisSPop(key string) (string, error) {
 	if key == "" {
 		return "", logiccode.RedisParamsErrorCode()
@@ -173,6 +172,27 @@ func RedisSPop(key string) (string, error) {
 		return "", logiccode.RedisKeyErrorCode()
 	} else if err != nil {
 		return "", err
+	} else {
+		return result, nil
+	}
+}
+
+// 从数据库中移除并返回集合中的多个随机元素
+// @key 	主键
+// @count 	数量
+func RedisSPopN(key string, count int64) ([]string, error) {
+	if key == "" {
+		return nil, logiccode.RedisParamsErrorCode()
+	}
+	client := getRedisClient()
+	if client == nil {
+		return nil, logiccode.RedisClientErrorCode()
+	}
+	result, err := client.SPopN(key, count).Result()
+	if err == redis.Nil {
+		return nil, logiccode.RedisKeyErrorCode()
+	} else if err != nil {
+		return nil, err
 	} else {
 		return result, nil
 	}
