@@ -36,7 +36,7 @@ package tasktimer
 
 import (
 	"fmt"
-	"git.gumpcome.com/go_kit/timekit"
+	"gitlab.gumpcome.com/common/go_kit/timekit"
 	"github.com/astaxie/beego/toolbox"
 )
 

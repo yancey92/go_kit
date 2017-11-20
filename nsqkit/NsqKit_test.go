@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"git.gumpcome.com/go_kit/timekit"
+	"gitlab.gumpcome.com/common/go_kit/timekit"
 	"github.com/nsqio/go-nsq"
 	"math/rand"
 	"strconv"

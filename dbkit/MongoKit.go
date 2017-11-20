@@ -3,8 +3,8 @@ package dbkit
 import (
 	"crypto/tls"
 	"fmt"
-	"git.gumpcome.com/go_kit/logiccode"
-	"git.gumpcome.com/go_kit/strkit"
+	"gitlab.gumpcome.com/common/go_kit/logiccode"
+	"gitlab.gumpcome.com/common/go_kit/strkit"
 	"github.com/astaxie/beego"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"

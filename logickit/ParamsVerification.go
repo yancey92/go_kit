@@ -2,7 +2,7 @@ package logickit
 
 import (
 	"fmt"
-	"git.gumpcome.com/go_kit/strkit"
+	"gitlab.gumpcome.com/common/go_kit/strkit"
 	"github.com/astaxie/beego"
 	"regexp"
 	"strconv"

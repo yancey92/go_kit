@@ -1,8 +1,8 @@
 package logickit
 
 import (
-	"git.gumpcome.com/go_kit/logiccode"
-	"git.gumpcome.com/go_kit/strkit"
+	"gitlab.gumpcome.com/common/go_kit/logiccode"
+	"gitlab.gumpcome.com/common/go_kit/strkit"
 	"strconv"
 	"strings"
 )

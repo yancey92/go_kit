@@ -2,7 +2,7 @@ package dbkit
 
 import (
 	"fmt"
-	"git.gumpcome.com/go_kit/logiccode"
+	"gitlab.gumpcome.com/common/go_kit/logiccode"
 	"github.com/go-redis/redis"
 	"strconv"
 	"strings"

@@ -5,7 +5,7 @@ package timekit
 import (
 	"errors"
 	"fmt"
-	"git.gumpcome.com/go_kit/logiccode"
+	"gitlab.gumpcome.com/common/go_kit/logiccode"
 	"time"
 )
 
