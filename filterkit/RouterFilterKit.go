@@ -2,7 +2,6 @@ package filterkit
 
 import (
 	"fmt"
-	"gitlab.gumpcome.com/common/go_kit/logkit"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
 	"time"
@@ -39,21 +38,10 @@ func BeforeRouterFilter(ctx *context.Context) {
 func FinishRouterFilter(ctx *context.Context) {
 	url := ctx.Input.URL()
 	info := apiStatistics[url]
-	log := logkit.GetLog()
-	if info == nil || log == nil {
-		return
-	}
 	info.elapsed = time.Since(info.startTime)
-
-	log.Debug("%s|%s|%s", info.url, info.elapsed.String(), info.params)
 }
 
 func InItBeegoFilter(pattern string) {
-	log := logkit.GetLog()
-	if log == nil {
-		return
-	}
 	beego.InsertFilter(pattern, beego.BeforeRouter, BeforeRouterFilter, false)
 	beego.InsertFilter(pattern, beego.FinishRouter, FinishRouterFilter, false)
-	log.Info("%s %s", pattern, "filter init success")
 }
