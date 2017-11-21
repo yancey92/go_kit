@@ -130,3 +130,13 @@ func TestMs2Date(t *testing.T) {
 	}
 	fmt.Printf("格式化后日期 %s\n", result)
 }
+
+func TestDateSubMonth(t *testing.T) {
+	startDate := "2015-11-11"
+	endDate := "2016-12-11"
+	result, err := DateSubMonth(startDate, endDate)
+	if err != nil {
+		fmt.Printf("%v", err)
+	}
+	fmt.Printf("开始日期=%s 结束日期=%s 结果= %v\n", startDate, endDate, result)
+}

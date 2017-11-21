@@ -5,6 +5,7 @@ import (
 	"gitlab.gumpcome.com/common/go_kit/strkit"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // 根据订单号获取分表信息
@@ -15,6 +16,11 @@ import (
 // 3:生成订单的日期 YYYYMMDD
 // 4:生成订单的时间 YYYYMMDDHHMMSS
 func GetTabelInfoByOutTradeNo(outTradeNo string) (string, string, string, string, error) {
+	//如果订单号不包含X字符，是老订单，前缀加20
+	isContain := strings.Contains(outTradeNo, "X")
+	if !isContain {
+		outTradeNo = "20" + outTradeNo
+	}
 	// 订单时间
 	orderTime := strkit.SubStr(outTradeNo, 0, 14)
 	if orderTime == "" || len(orderTime) != 14 {
@@ -38,6 +44,11 @@ func GetTabelInfoByOutTradeNo(outTradeNo string) (string, string, string, string
 // 3:生成订单的月份 YYYYMM
 // 4:生成订单的日期 YYYYMMDD
 func GetTabelInfoWithYearByOutTradeNo(outTradeNo string) (string, string, string, string, error) {
+	//如果订单号不包含X字符，是老订单，前缀加20
+	isContain := strings.Contains(outTradeNo, "X")
+	if !isContain {
+		outTradeNo = "20" + outTradeNo
+	}
 	// 订单时间
 	orderTime := strkit.SubStr(outTradeNo, 0, 14)
 	if orderTime == "" || len(orderTime) != 14 {
@@ -63,6 +74,11 @@ func GetTabelInfoWithYearByOutTradeNo(outTradeNo string) (string, string, string
 // 3:生成订单的月份 YYYYMM
 // 4:生成订单的日期 YYYYMMDD
 func GetPayTabelInfoWithYearByOutTradeNo(outTradeNo string) (string, string, string, string, error) {
+	//如果订单号不包含X字符，是老订单，前缀加20
+	isContain := strings.Contains(outTradeNo, "X")
+	if !isContain {
+		outTradeNo = "20" + outTradeNo
+	}
 	// 订单时间
 	orderTime := strkit.SubStr(outTradeNo, 0, 14)
 	if orderTime == "" || len(orderTime) != 14 {
@@ -88,6 +104,11 @@ func GetPayTabelInfoWithYearByOutTradeNo(outTradeNo string) (string, string, str
 // 3:生成订单的月份 YYYYMM
 // 4:生成订单的日期 YYYYMMDD
 func GetRefundTabelInfoWithYearByOutTradeNo(outTradeNo string) (string, string, string, string, error) {
+	//如果订单号不包含X字符，是老订单，前缀加20
+	isContain := strings.Contains(outTradeNo, "X")
+	if !isContain {
+		outTradeNo = "20" + outTradeNo
+	}
 	// 订单时间
 	orderTime := strkit.SubStr(outTradeNo, 0, 14)
 	if orderTime == "" || len(orderTime) != 14 {

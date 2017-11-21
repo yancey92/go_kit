@@ -2,8 +2,8 @@
 package logiccode
 
 import (
-	"gitlab.gumpcome.com/common/go_kit/strkit"
 	"github.com/astaxie/beego"
+	"gitlab.gumpcome.com/common/go_kit/strkit"
 	"strconv"
 )
 

@@ -253,3 +253,57 @@ func DefaultDateRangeVaild(startDate string, endDate string) (bool, error) {
 	}
 	return false, err
 }
+
+// @Title 获取两个日期之内的时间差，返回YYYYMM类型的字符串数组
+// startDate 开始日期 YYYY-MM-DD 格式
+// endDate 结束日期 YYYY-MM-DD 格式
+func DateSubMonth(startDate, endDate string) ([]string, error) {
+	start, _ := StringToTime(startDate, DateFormat_YYYY_MM_DD)
+	end, _ := StringToTime(endDate, DateFormat_YYYY_MM_DD)
+	dateSlice := make([]string, 0)
+	if start.Year() < end.Year() {
+		for i := start.Year(); i <= end.Year(); i++ {
+			if i == start.Year() {
+				for j := start.Month(); j <= 12; j++ {
+					t := time.Date(i, j, 1, 0, 0, 0, 0, time.Local)
+					timeString, err := TimeToString(t, DateFormat_YYYYMM)
+					if err != nil {
+						return nil, err
+					}
+					dateSlice = append(dateSlice, timeString)
+				}
+			}
+			if i > start.Year() && i < end.Year() {
+				for j := time.January; j <= 12; j++ {
+					t := time.Date(i, j, 1, 0, 0, 0, 0, time.Local)
+					timeString, err := TimeToString(t, DateFormat_YYYYMM)
+					if err != nil {
+						return nil, err
+					}
+					dateSlice = append(dateSlice, timeString)
+				}
+			}
+			if i == end.Year() {
+				for j := time.January; j <= end.Month(); j++ {
+					t := time.Date(i, j, 1, 0, 0, 0, 0, time.Local)
+					timeString, err := TimeToString(t, DateFormat_YYYYMM)
+					if err != nil {
+						return nil, err
+					}
+					dateSlice = append(dateSlice, timeString)
+				}
+			}
+		}
+	}
+	if start.Year() == end.Year() {
+		for j := start.Month(); j <= end.Month(); j++ {
+			t := time.Date(start.Year(), j, 1, 0, 0, 0, 0, time.Local)
+			timeString, err := TimeToString(t, DateFormat_YYYYMM)
+			if err != nil {
+				return nil, err
+			}
+			dateSlice = append(dateSlice, timeString)
+		}
+	}
+	return dateSlice, nil
+}

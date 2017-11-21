@@ -1,10 +1,10 @@
 package logickit
 
 import (
+	"github.com/astaxie/beego"
 	"gitlab.gumpcome.com/common/go_kit/logiccode"
 	"gitlab.gumpcome.com/common/go_kit/strkit"
 	"gitlab.gumpcome.com/common/go_kit/timekit"
-	"github.com/astaxie/beego"
 	"regexp"
 	"strconv"
 	"time"

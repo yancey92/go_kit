@@ -2,8 +2,8 @@ package dbkit
 
 import (
 	"fmt"
-	"gitlab.gumpcome.com/common/go_kit/logiccode"
 	"github.com/go-redis/redis"
+	"gitlab.gumpcome.com/common/go_kit/logiccode"
 	"strconv"
 	"strings"
 	"time"

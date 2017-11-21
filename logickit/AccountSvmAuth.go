@@ -2,9 +2,9 @@ package logickit
 
 import (
 	"fmt"
-	"gitlab.gumpcome.com/common/go_kit/logiccode"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/httplib"
+	"gitlab.gumpcome.com/common/go_kit/logiccode"
 	"net/http"
 	"strconv"
 )

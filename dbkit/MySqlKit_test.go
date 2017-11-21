@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/astaxie/beego/logs"
 	"gitlab.gumpcome.com/common/go_kit/idkit"
 	"gitlab.gumpcome.com/common/go_kit/timekit"
-	"github.com/astaxie/beego/logs"
 	"testing"
 )
 

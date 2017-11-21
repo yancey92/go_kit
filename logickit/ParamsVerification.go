@@ -2,8 +2,8 @@ package logickit
 
 import (
 	"fmt"
-	"gitlab.gumpcome.com/common/go_kit/strkit"
 	"github.com/astaxie/beego"
+	"gitlab.gumpcome.com/common/go_kit/strkit"
 	"regexp"
 	"strconv"
 	"strings"
