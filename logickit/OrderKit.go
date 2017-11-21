@@ -5,7 +5,6 @@ import (
 	"gitlab.gumpcome.com/common/go_kit/strkit"
 	"strconv"
 	"strings"
-	"time"
 )
 
 // 根据订单号获取分表信息
