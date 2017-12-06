@@ -23,6 +23,8 @@ func GetCommonDiscountPlanCode(planType int, companyId int) (string, error) {
 		code, err = planCodeBuild(Code_Goods_Plan_Single, companyId)
 	case Goods_Plan_Many:
 		code, err = planCodeBuild(Code_Goods_Plan_Many, companyId)
+	case Goods_Plan_First:
+		code, err = planCodeBuild(Code_Plan_First, companyId)
 	default:
 		beego.Error("方案类型错误", planType)
 		return "", logiccode.New(ParamValueError, "方案类型错误")
@@ -35,7 +37,7 @@ func GetCommonDiscountPlanCode(planType int, companyId int) (string, error) {
 
 //取货码活动code码
 func GetExchangPlanCode(companyId int) (string, error) {
-	code, err := planCodeBuild(Exchange_Plan_code, companyId)
+	code, err := planCodeBuild(Code_Plan_Exchange, companyId)
 	if err != nil {
 		beego.Error(err)
 	}
