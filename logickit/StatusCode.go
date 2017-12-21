@@ -82,6 +82,7 @@ const (
 	Goods_Plan_Many       = 13 // 两件购活动
 	Goods_Plan_First      = 14 // 首单立减
 	Goods_Plan_Full_Order = 15 // 满单立减
+	Goods_Plan_Full_Money = 16 // 满额立减
 
 	// 营销方案状态码
 	Plan_Status_Not_Activated = 10 // 未激活
@@ -103,6 +104,7 @@ const (
 	Code_Plan_Exchange        = "K" // 取货码方案code
 	Code_Plan_First           = "L" // 首单立减code
 	Code_Plan_Full_Order      = "M" // 满单立减code
+	Code_Plan_Full_Money      = "N" // 满额立减code
 
 )
 
