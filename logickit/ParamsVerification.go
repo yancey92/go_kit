@@ -225,7 +225,8 @@ func VerificationDiscountType(discountType int) bool {
 		discountType == Goods_Plan_Single ||
 		discountType == Goods_Plan_Many ||
 		discountType == Goods_Plan_First ||
-		discountType == Goods_Plan_Full_Order) {
+		discountType == Goods_Plan_Full_Order ||
+		discountType == Goods_Plan_Full_Money) {
 		beego.Error("方案类型错误", fmt.Sprintf("类型：%v", discountType))
 		return false
 	}
