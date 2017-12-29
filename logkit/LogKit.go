@@ -1,7 +1,9 @@
 package logkit
 
 import (
+	"fmt"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/context"
 	"github.com/astaxie/beego/logs"
 	"os"
 )
@@ -10,6 +12,16 @@ const (
 	LogDevMode  = "dev"
 	LogProdMode = "prod"
 )
+
+// 输出错误日志信息
+type ErrorInfo struct {
+	RequestId     string                 `desc:"请求唯一标识"`
+	MethodName    string                 `desc:"方法名"`
+	MethodContext *context.Context       `desc:"请求参数信息"`
+	ExtContext    map[string]interface{} `desc:"拓展请求参数信息"`
+	ErrorRemark   string                 `desc:"错误信息描述"`
+	ErrorMsg      error                  `desc:"错误信息"`
+}
 
 func InitLog() {
 	logmode := beego.AppConfig.String("logmode")
@@ -31,4 +43,28 @@ func InitLog() {
 		"filename":"`+logFile+`",
 		"separate":["emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"]
 	}`)
+}
+
+func (this *ErrorInfo) AddExtContent(key string, val interface{}) {
+	if this.ExtContext == nil {
+		this.ExtContext = make(map[string]interface{})
+	}
+	this.ExtContext[key] = val
+}
+
+func OutErrorInfo(errorMsg *ErrorInfo) string {
+	bodyContent := ""
+	formContent := ""
+	methodContent := ""
+	if errorMsg.MethodContext != nil {
+		bodyContent = string(errorMsg.MethodContext.Input.RequestBody)
+		formContent = fmt.Sprintf("%#v", errorMsg.MethodContext.Request.Form)
+		methodContent = errorMsg.MethodContext.Input.Context.Request.RequestURI
+	}
+	if methodContent == "" {
+		methodContent = errorMsg.MethodName
+	}
+	return fmt.Sprintf("RequestId:%v \nMethodName:%v \nRequestBody:%v \nRequestForm:%v \nExtContext:%#v \nErrorRemark:%v \nErrorMsg:%v",
+		errorMsg.RequestId, methodContent, bodyContent,
+		formContent, errorMsg.ExtContext, errorMsg.ErrorRemark, errorMsg.ErrorMsg)
 }
