@@ -64,7 +64,7 @@ func OutErrorInfo(errorMsg *ErrorInfo) string {
 	if methodContent == "" {
 		methodContent = errorMsg.MethodName
 	}
-	return fmt.Sprintf("RequestId:%v \nMethodName:%v \nRequestBody:%v \nRequestForm:%v \nExtContext:%#v \nErrorRemark:%v \nErrorMsg:%v",
+	return fmt.Sprintf("RequestId:%v MethodName:%v RequestBody:%v RequestForm:%v ExtContext:%#v ErrorRemark:%v ErrorMsg:%v",
 		errorMsg.RequestId, methodContent, bodyContent,
 		formContent, errorMsg.ExtContext, errorMsg.ErrorRemark, errorMsg.ErrorMsg)
 }
