@@ -76,11 +76,13 @@ const (
 	Vgoods_Plan_Surprise = 13 // 惊喜
 
 	// 常规折扣商品营销方案类型标识
-	Goods_Plan_Svm     = 10 // 整机折扣
-	Goods_Plan_Present = 11 // 买赠活动
-	Goods_Plan_Single  = 12 // 单件购活动
-	Goods_Plan_Many    = 13 // 两件购活动
-	Goods_Plan_First   = 14 // 首单立减
+	Goods_Plan_Svm        = 10 // 整机折扣
+	Goods_Plan_Present    = 11 // 买赠活动
+	Goods_Plan_Single     = 12 // 单件购活动
+	Goods_Plan_Many       = 13 // 两件购活动
+	Goods_Plan_First      = 14 // 首单立减
+	Goods_Plan_Full_Order = 15 // 满单立减
+	Goods_Plan_Full_Money = 16 // 满额立减
 
 	// 营销方案状态码
 	Plan_Status_Not_Activated = 10 // 未激活
@@ -101,6 +103,8 @@ const (
 	Code_Vgoods_Plan_Surprise = "J" // 虚拟商品惊喜方案code类型
 	Code_Plan_Exchange        = "K" // 取货码方案code
 	Code_Plan_First           = "L" // 首单立减code
+	Code_Plan_Full_Order      = "M" // 满单立减code
+	Code_Plan_Full_Money      = "N" // 满额立减code
 
 )
 

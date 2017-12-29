@@ -218,13 +218,33 @@ func VerificationPageSize(size int) bool {
 	return true
 }
 
+// 校验营销方案标签
+func VerificationSaleTag(saleTag int) bool {
+	if !(10 <= saleTag && saleTag <= 12) {
+		beego.Error("方案的促销标签参数错误", fmt.Sprintf("参数值为：%v", saleTag))
+		return false
+	}
+	return true
+}
+
+// 校验公司所属集团
+func VerificationCompanyOrganization(organization int) bool {
+	if !(10 <= organization && organization <= 11) {
+		beego.Error("公司所属集团参数错误", fmt.Sprintf("参数值为：%v", organization))
+		return false
+	}
+	return true
+}
+
 // 校验普通折扣方案类型
 func VerificationDiscountType(discountType int) bool {
 	if !(discountType == Goods_Plan_Svm ||
 		discountType == Goods_Plan_Present ||
 		discountType == Goods_Plan_Single ||
 		discountType == Goods_Plan_Many ||
-		discountType == Goods_Plan_First) {
+		discountType == Goods_Plan_First ||
+		discountType == Goods_Plan_Full_Order ||
+		discountType == Goods_Plan_Full_Money) {
 		beego.Error("方案类型错误", fmt.Sprintf("类型：%v", discountType))
 		return false
 	}
