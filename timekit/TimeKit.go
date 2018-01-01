@@ -6,6 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"gitlab.gumpcome.com/common/go_kit/logiccode"
+	"gitlab.gumpcome.com/common/go_kit/strkit"
+	"strconv"
 	"time"
 )
 
@@ -306,4 +308,52 @@ func DateSubMonth(startDate, endDate string) ([]string, error) {
 		}
 	}
 	return dateSlice, nil
+}
+
+func JoinDateTrix(startTime, endTime string) ([]string, error) {
+	s := []string{startTime, endTime}
+	t := make([]time.Time, 0, 2)
+	for _, i := range s {
+		r, err := time.Parse(DateFormat_YYYY_MM_DD, i)
+		if err != nil {
+			rr, err2 := time.Parse(DateFormat_YYYY_MM_DD_HH_MM_SS, i)
+			if err2 != nil {
+				return nil, errors.New(fmt.Sprintf("日期时间参数 %s 格式错误 ，合法格式为：2006-01-02 15:04:05 或2006-01-02", i))
+			}
+			t = append(t, rr)
+		} else {
+			t = append(t, r)
+		}
+	}
+	sn := t[0].Year()*100 + int(t[0].Month())
+	en := t[1].Year()*100 + int(t[1].Month())
+	if sn > en {
+		return nil, errors.New(fmt.Sprintf("参数不合法：开始时间 %s 晚于结束时间 %s", startTime, endTime))
+	}
+	mm := int(t[0].Month())
+	yy := t[0].Year() * 100
+	result := make([]string, 0)
+	for i := sn; i <= en; {
+		result = append(result, strconv.Itoa(i))
+		mm++
+		if mm > 12 {
+			mm = 1
+			yy += 100
+		}
+		i = yy + mm
+	}
+	return result, nil
+}
+
+//解析 "2006-01-02 15:04:05" 格式时间字符串为两部分 "20060102" "150405"
+func DateStrSplit(date string) (string, string, error) {
+	dt, err := StringToTime(date, DateFormat_YYYY_MM_DD_HH_MM_SS)
+	if err != nil {
+		return "", "", err
+	}
+	s, err := TimeToString(dt, DateFormat_YYYYMMDDHHMMSS)
+	if err != nil {
+		return "", "", err
+	}
+	return strkit.SubStr(s, 0, 8), strkit.SubStr(s, 8, 14), nil
 }

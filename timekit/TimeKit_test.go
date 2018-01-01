@@ -140,3 +140,12 @@ func TestDateSubMonth(t *testing.T) {
 	}
 	fmt.Printf("开始日期=%s 结束日期=%s 结果= %v\n", startDate, endDate, result)
 }
+func TestDateStrSplit(t *testing.T) {
+	s := "2017-12-13 12:28:55"
+	date, time, err := DateStrSplit(s)
+	if err != nil {
+		fmt.Printf("%v", err)
+	}
+	fmt.Println(s)
+	fmt.Printf("日期：%s  时间：%s\n", date, time)
+}
