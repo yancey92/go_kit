@@ -14,7 +14,7 @@ const (
 func InitLog() {
 	logmode := beego.AppConfig.String("logmode")
 	if logmode == "" || (logmode != LogDevMode && logmode != LogProdMode) {
-		panic("config logmode is empty or log mode isnot dev or prod!")
+		panic("config logmode is empty or log mode is not dev or prod!")
 	}
 
 	logDir := "logs"
