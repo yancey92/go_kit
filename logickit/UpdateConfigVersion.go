@@ -60,18 +60,19 @@ func ConfigVersionBatchUpdate(url string, svmIds []int) (bool, []int) {
 		}
 		svmIdStr := strings.Replace(strings.Replace(strings.Replace(fmt.Sprint(svmidsBatch), " ", ",", batchEditSvmIdNum), "[", "", 1), "]", "", 1)
 		resp := RespBatchUpdateSvmConfigVersion{}
-		beego.Info("批量修改售货机版本号URl：", url)
+		beego.Debug("批量升级售货机配置版本号URl", url)
+		beego.Debug("批量升级配置版本号的售货机id", svmIdStr)
 		if err := httplib.Post(url).
 			Param("svm_ids", svmIdStr).
 			ToJSON(&resp); err != nil {
 			// 结构体转义失败
-			beego.Error(err, svmidsBatch)
+			beego.Error("批量升级售货机配置版本号时，下行返回数据转换为结构体失败", fmt.Sprintf("%#v", err))
 			isOk = false
 			failureSvmIds = append(failureSvmIds, svmidsBatch...)
 		}
 		if resp.Code != http.StatusOK {
 			isOk = false
-			beego.Error(resp)
+			beego.Error("批量升级售货机配置版本号时失败", fmt.Sprintf("%#v", &resp))
 			if len(resp.Data.FailSvms) > 0 {
 				failureSvmIds = append(failureSvmIds, resp.Data.FailSvms...)
 			} else {
@@ -91,7 +92,7 @@ func ConfigVersionUpdate(url string, svmId int) (bool, int) {
 	resp := RespUpdateSvmConfigVersion{}
 	if err := httpClient.ToJSON(&resp); err != nil {
 		// 结构体转义失败
-		beego.Error(fmt.Sprintf("更新单个售货机版本号返回体解析错误svmid=%#v", svmId), err)
+		beego.Error("更新单个售货机版本号，下行返回数据转换为结构体失败", fmt.Sprintf("svmid=%#v", svmId), err)
 		return false, svmId
 	}
 	if resp.Code != http.StatusOK || resp.Data.IsSuccess != "Y" {
@@ -122,7 +123,8 @@ func WhiteVersionBatchUpdate(url string, svmIds []int) (bool, []int) {
 		}
 		svmIdStr := strings.Replace(strings.Replace(strings.Replace(fmt.Sprint(svmidsBatch), " ", ",", batchEditSvmIdNum), "[", "", 1), "]", "", 1)
 		resp := RespBatchUpdateSvmWhiteVersion{}
-		beego.Info("批量修改售货机版本号URl：", url)
+		beego.Debug("批量升级售货机白名单版本号URl", url)
+		beego.Debug("批量升级版本号的售货机id", svmIdStr)
 		if err := httplib.Post(url).
 			Param("svm_ids", svmIdStr).
 			ToJSON(&resp); err != nil {

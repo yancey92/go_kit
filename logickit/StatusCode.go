@@ -76,10 +76,13 @@ const (
 	Vgoods_Plan_Surprise = 13 // 惊喜
 
 	// 常规折扣商品营销方案类型标识
-	Goods_Plan_Svm     = 10 // 整机折扣
-	Goods_Plan_Present = 11 // 买赠活动
-	Goods_Plan_Single  = 12 // 单件购活动
-	Goods_Plan_Many    = 13 // 两件购活动
+	Goods_Plan_Svm        = 10 // 整机折扣
+	Goods_Plan_Present    = 11 // 买赠活动
+	Goods_Plan_Single     = 12 // 单件购活动
+	Goods_Plan_Many       = 13 // 两件购活动
+	Goods_Plan_First      = 14 // 首单立减
+	Goods_Plan_Full_Order = 15 // 满单立减
+	Goods_Plan_Full_Money = 16 // 满额立减
 
 	// 营销方案状态码
 	Plan_Status_Not_Activated = 10 // 未激活
@@ -88,20 +91,20 @@ const (
 	Plan_Status_Stopped       = 13 // 已停止
 
 	// 生成营销方案code码时，使用的方案类型code标识
+	Code_Goods_Plan_Svm       = "A" // 实物商品整机折扣code类型
+	Code_Goods_Plan_Present   = "B" // 实物商品买赠活动code类型
+	Code_Goods_Plan_Single    = "C" // 实物商品单件购code类型
+	Code_Goods_Plan_Many      = "D" // 实物商品多件购code类型
+	Code_Goods_Plan_Home      = "E" // 首页商品营销方案
+	Code_Plan_Ads             = "F" // 广告营销方案
+	Code_Plan_PayTag          = "G" // 支付标签营销方案
 	Code_Vgoods_Plan_Qrcode   = "H" // 虚拟商品扫码方案code类型
 	Code_Vgoods_Plan_Package  = "I" // 虚拟商品套餐方案code类型
 	Code_Vgoods_Plan_Surprise = "J" // 虚拟商品惊喜方案code类型
-
-	Code_Goods_Plan_Svm     = "A" // 实物商品整机折扣code类型
-	Code_Goods_Plan_Present = "B" // 实物商品买赠活动code类型
-	Code_Goods_Plan_Single  = "C" // 实物商品单件购code类型
-	Code_Goods_Plan_Many    = "D" // 实物商品多件购code类型
-
-	Code_Goods_Plan_Home = "E" // 首页商品营销方案
-	Code_Plan_Ads        = "F" // 广告营销方案
-	Code_Plan_PayTag     = "G" // 支付标签营销方案
-
-	Exchange_Plan_code = "K" //取货码方案code
+	Code_Plan_Exchange        = "K" // 取货码方案code
+	Code_Plan_First           = "L" // 首单立减code
+	Code_Plan_Full_Order      = "M" // 满单立减code
+	Code_Plan_Full_Money      = "N" // 满额立减code
 
 )
 
