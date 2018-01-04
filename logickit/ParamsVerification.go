@@ -229,7 +229,7 @@ func VerificationSaleTag(saleTag int) bool {
 
 // 校验公司所属集团
 func VerificationCompanyOrganization(organization int) bool {
-	if !(10 <= organization && organization <= 11) {
+	if !(10 <= organization && organization <= 12) {
 		beego.Error("公司所属集团参数错误", fmt.Sprintf("参数值为：%v", organization))
 		return false
 	}
