@@ -15,3 +15,7 @@ const (
 	CONSTANT_PUSHNUM_OVERLIMIT = "pushnum_overlimit"
 	CONSTANT_NOT_AUTH          = "not_auth"
 )
+
+const (
+	GTPUSHTYPE = 11
+)

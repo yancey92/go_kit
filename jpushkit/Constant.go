@@ -9,4 +9,5 @@ const (
 
 const (
 	PLATFORM_ANDROID = "android"
+	JPUSHTYPE        = 10
 )
