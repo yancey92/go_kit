@@ -56,7 +56,7 @@ func ConfigVersionBatchUpdate(url string, svmIds []int) (bool, []int) {
 		if i == forNum && len(svmIds)%batchEditSvmIdNum > 0 {
 			svmidsBatch = svmIds[(i-1)*batchEditSvmIdNum:]
 		} else {
-			svmidsBatch = svmIds[(i-1)*batchEditSvmIdNum : batchEditSvmIdNum]
+			svmidsBatch = svmIds[(i-1)*batchEditSvmIdNum : i*batchEditSvmIdNum]
 		}
 		svmIdStr := strings.Replace(strings.Replace(strings.Replace(fmt.Sprint(svmidsBatch), " ", ",", batchEditSvmIdNum), "[", "", 1), "]", "", 1)
 		resp := RespBatchUpdateSvmConfigVersion{}
@@ -119,7 +119,7 @@ func WhiteVersionBatchUpdate(url string, svmIds []int) (bool, []int) {
 		if i == forNum && len(svmIds)%batchEditSvmIdNum > 0 {
 			svmidsBatch = svmIds[(i-1)*batchEditSvmIdNum:]
 		} else {
-			svmidsBatch = svmIds[(i-1)*batchEditSvmIdNum : batchEditSvmIdNum]
+			svmidsBatch = svmIds[(i-1)*batchEditSvmIdNum : i*batchEditSvmIdNum]
 		}
 		svmIdStr := strings.Replace(strings.Replace(strings.Replace(fmt.Sprint(svmidsBatch), " ", ",", batchEditSvmIdNum), "[", "", 1), "]", "", 1)
 		resp := RespBatchUpdateSvmWhiteVersion{}
