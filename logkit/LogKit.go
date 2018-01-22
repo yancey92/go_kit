@@ -45,11 +45,12 @@ func InitLog() {
 	}`)
 }
 
-func (this *ErrorInfo) AddExtContent(key string, val interface{}) {
+func (this *ErrorInfo) AddExtContent(key string, val interface{}) *ErrorInfo {
 	if this.ExtContext == nil {
 		this.ExtContext = make(map[string]interface{})
 	}
 	this.ExtContext[key] = val
+	return this
 }
 
 func OutErrorInfo(errorMsg *ErrorInfo) string {
