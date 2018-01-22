@@ -132,8 +132,8 @@ func TestMs2Date(t *testing.T) {
 }
 
 func TestDateSubMonth(t *testing.T) {
-	startDate := "2015-11-11"
-	endDate := "2016-12-11"
+	startDate := "2017-11-11"
+	endDate := "2018-01-11"
 	result, err := DateSubMonth(startDate, endDate)
 	if err != nil {
 		fmt.Printf("%v", err)
