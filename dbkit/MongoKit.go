@@ -189,6 +189,18 @@ func GetMongoSession() (*mgo.Session, error) {
 	return getSession()
 }
 
+// 获取集合
+func GetCollection(colelection string) (*mgo.Collection, error) {
+	session, err := getSession()
+	if err != nil {
+		return nil, err
+	}
+
+	//defer session.Close()
+	c := session.DB(mongoDBName).C(colelection)
+	return c, nil
+}
+
 func getSession() (*mgo.Session, error) {
 	if !mongoInited || globalSession == nil {
 		return nil, logiccode.MongoSessionErrorCode()
