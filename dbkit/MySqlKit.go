@@ -377,6 +377,8 @@ func FindInMysql(myDbCon *sql.DB, querySql string, intItems []string, data ...in
 				itemVal = string(col.([]uint8))
 			case int64:
 				itemVal = fmt.Sprint(col.(int64))
+			case float32:
+				itemVal = fmt.Sprint(col.(float32))
 			}
 
 			if _, ok := intItemsMap[columns[i]]; ok {
