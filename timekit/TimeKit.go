@@ -357,3 +357,12 @@ func DateStrSplit(date string) (string, string, error) {
 	}
 	return strkit.SubStr(s, 0, 8), strkit.SubStr(s, 8, 14), nil
 }
+
+// 时间字符串转换，"2006-01-02 15:04:05" 转换为 "20060102150405"
+func DateStrConv(date string) (string, error) {
+	t, err := time.Parse(DateFormat_YYYY_MM_DD_HH_MM_SS, date)
+	if err != nil {
+		return "", err
+	}
+	return t.Format(DateFormat_YYYYMMDDHHMMSS), nil
+}

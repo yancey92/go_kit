@@ -132,8 +132,8 @@ func TestMs2Date(t *testing.T) {
 }
 
 func TestDateSubMonth(t *testing.T) {
-	startDate := "2015-11-11"
-	endDate := "2016-12-11"
+	startDate := "2017-11-11"
+	endDate := "2018-01-11"
 	result, err := DateSubMonth(startDate, endDate)
 	if err != nil {
 		fmt.Printf("%v", err)
@@ -148,4 +148,13 @@ func TestDateStrSplit(t *testing.T) {
 	}
 	fmt.Println(s)
 	fmt.Printf("日期：%s  时间：%s\n", date, time)
+}
+
+func TestDateStrConv(t *testing.T) {
+	s := "2017-12-13 12:28:55"
+	r, err := DateStrConv(s)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(r)
 }

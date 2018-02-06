@@ -198,6 +198,37 @@ func RedisSPopN(key string, count int64) ([]string, error) {
 	}
 }
 
+//使用pipeline获取取货码
+//@key   取货码key值
+//@count 取货码数量
+func PipeGetCode(key string, count int) ([]string, error) {
+	if key == "" {
+		return nil, logiccode.RedisParamsErrorCode()
+	}
+	client := getRedisClient()
+	if client == nil {
+		return nil, logiccode.RedisClientErrorCode()
+	}
+	result := []string{}
+	cmds, err := client.Pipelined(func(pipeliner redis.Pipeliner) error {
+		for i := 0; i < count; i++ {
+			pipeliner.SPop(key)
+		}
+		return nil
+	})
+	for _, v := range cmds {
+		code := v.(*redis.StringCmd).Val()
+		result = append(result, code)
+	}
+	if err == redis.Nil {
+		return nil, logiccode.RedisKeyErrorCode()
+	} else if err != nil {
+		return nil, err
+	} else {
+		return result, nil
+	}
+}
+
 // 返回集合 key 的基数(集合中元素的数量)
 // @key 	主键
 // @count 	数量
