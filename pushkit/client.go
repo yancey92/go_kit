@@ -54,6 +54,7 @@ func PushMsg(msg *PushMessage) error {
 	}
 
 	errStr := ""
+	nErr := 0
 	data := createMsg(msg)
 	for _, v := range msg.Recv {
 		if v.ChanType == JPUSHTYPE {
@@ -62,6 +63,7 @@ func PushMsg(msg *PushMessage) error {
 			if err != nil {
 				beego.Error(fmt.Sprintf("极光推送错误， error:%v, data:%#v", err, data))
 				errStr += err.Error()
+				nErr++
 			}
 		} else if v.ChanType == GTPUSHTYPE {
 			data["msg"] = msg.Msg
@@ -69,11 +71,15 @@ func PushMsg(msg *PushMessage) error {
 			if err != nil {
 				beego.Error(fmt.Sprintf("个推推送错误， error:%v, data:%#v", err, data))
 				errStr += err.Error()
+				nErr++
 			}
 		}
 	}
 
-	return fmt.Errorf(errStr)
+	if nErr >= len(msg.Recv) {
+		return fmt.Errorf(errStr)
+	}
+	return nil
 }
 
 func jPush(regId string, content map[string]interface{}) error {
