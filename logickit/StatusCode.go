@@ -62,6 +62,9 @@ const (
 	PaysCodeError             = 120024 // 支付二维码获取失败
 	BufferOperationError      = 120025 // 缓存操作失败
 	KeyNotExistRedis          = 100018 // redis中获取key不存在
+	VerifyCodeError           = 120040 // 验证码错误
+	VerifyCodeNotExist        = 120041 // 验证码不存在
+	AuthTokenError            = 120042 // token出现错误
 
 	// 目录文件
 	FileReadError  = 130001 // 文件读错误
