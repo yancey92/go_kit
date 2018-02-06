@@ -24,6 +24,14 @@ type Page struct {
 	List       interface{} `json:"list" desc:"分页结果集"`
 }
 
+//type PageList struct {
+//	PageNumber int                      `json:"page_number" desc:"第几页"`
+//	PageSize   int                      `json:"page_size" desc:"每页显示记录数"`
+//	TotalPage  int                      `json:"total_page" desc:"共多少页"`
+//	TotalRow   int                      `json:"total_row" desc:"多少条记录"`
+//	List       []map[string]interface{} `json:"list" desc:"分页结果集"`
+//}
+
 func addDbCfg(cfgName string, db *sql.DB) error {
 	if cfgName == "" {
 		return errors.New("mysql config name is nil!")
@@ -531,3 +539,56 @@ func PaginateInMysql(myDbCon *sql.DB, pageNumber int, pageSize int, selectSql st
 
 	return Page{PageNumber: pageNumber, PageSize: pageSize, TotalPage: totalPage, TotalRow: totalRow, List: pageResult}, nil
 }
+
+//func PageListMysql(myDbCon *sql.DB, pageNumber int, pageSize int, selectSql string, sqlExceptSelect string, intItems []string, data ...interface{}) (*PageList, error) {
+//	result := new(PageList)
+//	result.PageNumber = pageNumber
+//	result.PageSize = pageSize
+//	if myDbCon == nil {
+//		return nil, logiccode.DbConErrorCode()
+//	}
+//
+//	if pageNumber < 0 || pageSize <= 0 || pageSize > 100 {
+//		return nil, logiccode.DbPageOutErrorCode()
+//	}
+//
+//	//统计记录总数
+//	totalRowSqlBuilder := strkit.StringBuilder{}
+//	totalRowSqlBuilder.Append("SELECT COUNT(*) AS count ").Append(sqlExceptSelect)
+//	totalRowResult, err := FindFirstInMysql(myDbCon, totalRowSqlBuilder.ToString(), []string{"count"}, data...)
+//
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	totalRow, ok := totalRowResult["count"].(int)
+//	if !ok {
+//		return nil, logiccode.DbPageCountToIntCode()
+//	}
+//
+//	//计算共多少页记录
+//	totalPage := totalRow / pageSize
+//	if totalRow%pageSize != 0 {
+//		totalPage++
+//	}
+//
+//	result.TotalRow = totalRow
+//	result.TotalPage = totalPage
+//
+//	//查询的页码超出总页数
+//	if pageNumber > totalPage {
+//		return result, nil
+//	}
+//
+//	offset := pageSize * (pageNumber - 1)
+//
+//	pageSqlBuilder := strkit.StringBuilder{}
+//	pageSqlBuilder.Append(selectSql).Append(" ").Append(sqlExceptSelect).Append(" LIMIT ").Append(strconv.Itoa(offset)).Append(", ").Append(strconv.Itoa(pageSize))
+//	pageResult, err := FindInMysql(myDbCon, pageSqlBuilder.ToString(), intItems, data...)
+//	if err != nil {
+//		return nil, err
+//	}
+//	result.List = pageResult
+//
+//	return result, nil
+//}

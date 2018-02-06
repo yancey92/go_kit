@@ -149,3 +149,12 @@ func TestDateStrSplit(t *testing.T) {
 	fmt.Println(s)
 	fmt.Printf("日期：%s  时间：%s\n", date, time)
 }
+
+func TestDateStrConv(t *testing.T) {
+	s := "2017-12-13 12:28:55"
+	r, err := DateStrConv(s)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(r)
+}
