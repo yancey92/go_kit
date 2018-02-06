@@ -7,6 +7,7 @@ import (
 	"github.com/astaxie/beego"
 	_ "github.com/go-sql-driver/mysql"
 	"gitlab.gumpcome.com/common/go_kit/logiccode"
+	"gitlab.gumpcome.com/common/go_kit/logickit"
 	"gitlab.gumpcome.com/common/go_kit/strkit"
 	"strconv"
 	"strings"
@@ -490,7 +491,7 @@ func PaginateInMysql(myDbCon *sql.DB, pageNumber int, pageSize int, selectSql st
 		return Page{}, logiccode.DbConErrorCode()
 	}
 
-	if pageNumber < 0 || pageSize <= 0 || pageSize > 100 {
+	if pageNumber < 0 || pageSize <= 0 || !logickit.VerificationPageSize(pageSize) {
 		return Page{}, logiccode.DbPageOutErrorCode()
 	}
 
