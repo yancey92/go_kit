@@ -378,6 +378,10 @@ func getRedisClient() *redis.Client {
 	return redisClient
 }
 
+func GetRedisClient() *redis.Client {
+	return getRedisClient()
+}
+
 // Redis DEL 命令用于删除已存在的键。不存在的 key 会被忽略。
 // @key 	主键
 func RedisDel(key string) error {
