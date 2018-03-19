@@ -1,6 +1,9 @@
 package intkit
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestIntIsZero(t *testing.T) {
 	if !IntIsZero(0, 0) { //应该是true
@@ -12,4 +15,9 @@ func TestIntIsZero(t *testing.T) {
 		t.Log("TestIntIsZero-01 fail")
 		t.Fail()
 	}
+}
+
+func TestToFixed(t *testing.T) {
+	f := ToFixed(0.12345, 6)
+	fmt.Println(f)
 }
