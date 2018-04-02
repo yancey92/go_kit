@@ -15,6 +15,7 @@ import (
 )
 
 var dbs = make(map[string]*sql.DB)
+var ErrNoRows = sql.ErrNoRows
 
 type Page struct {
 	PageNumber int         `json:"page_number" desc:"第几页"`
